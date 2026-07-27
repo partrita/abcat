@@ -1,5 +1,5 @@
-from ab_numbering_lite.vdomain import analyze_vdomain
 from ab_numbering_lite.schemas import ChainType
+from ab_numbering_lite.vdomain import analyze_vdomain
 
 TRASTUZUMAB_VH = (
     "EVQLVESGGGLVQPGGSLRLSCAASGFTFTDYTMDWVRQAPGKGLEWVADVNPNSGGSIYNQRFKGRFTLS"

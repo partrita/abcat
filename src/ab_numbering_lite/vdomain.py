@@ -1,12 +1,13 @@
 import logging
-from typing import Dict, Tuple, Any
+from typing import Any
+
 from Bio.Align import PairwiseAligner
 
 from ab_numbering_lite.schemas import (
-    VAnalysisResult,
-    ChainType,
     CDRRegion,
+    ChainType,
     FrameworkRegion,
+    VAnalysisResult,
 )
 
 logger = logging.getLogger(__name__)
@@ -93,7 +94,12 @@ def analyze_vdomain(sequence: str, scheme: str = "imgt") -> VAnalysisResult:
                     converted = model.to_scheme(scheme_lower)
                     if converted:
                         results = converted
-                except Exception as scheme_err:
+                except (
+                    AttributeError,
+                    KeyError,
+                    ValueError,
+                    RuntimeError,
+                ) as scheme_err:
                     logger.warning(
                         f"Failed to convert to scheme '{scheme_lower}': {scheme_err}"
                     )
@@ -110,7 +116,7 @@ def analyze_vdomain(sequence: str, scheme: str = "imgt") -> VAnalysisResult:
 
         if results:
             return _parse_anarcii_results(cleaned_seq, results, scheme_lower)
-    except Exception as e:
+    except (ImportError, AttributeError, KeyError, ValueError, RuntimeError) as e:
         logger.debug(
             f"ANARCII API call failed or not installed ({e}), using built-in alignment fallback."
         )
@@ -148,7 +154,7 @@ def _parse_anarcii_results(full_seq: str, results: Any, scheme: str) -> VAnalysi
         if not domain_numbering:
             return _fallback_vdomain_analysis(full_seq, scheme)
 
-        numbering_dict: Dict[str, str] = {}
+        numbering_dict: dict[str, str] = {}
         v_seq_chars = []
 
         if isinstance(domain_numbering, (list, tuple)):
@@ -170,9 +176,11 @@ def _parse_anarcii_results(full_seq: str, results: Any, scheme: str) -> VAnalysi
         if not chain_letter:
             import re
 
-            if "118" in numbering_dict and numbering_dict["118"] in ["W", "w"]:
-                chain_type = ChainType.HEAVY
-            elif re.search(r"W[GQAE]G[A-Z]TLTVSS|WG[A-Z]G", v_domain_seq):
+            if (
+                "118" in numbering_dict
+                and numbering_dict["118"] in ["W", "w"]
+                or re.search(r"W[GQAE]G[A-Z]TLTVSS|WG[A-Z]G", v_domain_seq)
+            ):
                 chain_type = ChainType.HEAVY
             else:
                 chain_type = ChainType.KAPPA
@@ -197,7 +205,7 @@ def _parse_anarcii_results(full_seq: str, results: Any, scheme: str) -> VAnalysi
             frameworks=frameworks,
             confidence=0.99,
         )
-    except Exception as err:
+    except (IndexError, KeyError, TypeError, ValueError) as err:
         logger.debug(f"Error parsing ANARCII results ({err}), using fallback")
         return _fallback_vdomain_analysis(full_seq, scheme)
 
@@ -255,7 +263,7 @@ def _fallback_vdomain_analysis(sequence: str, scheme: str) -> VAnalysisResult:
     w41_idx = next((i for i in w_indices if c23_idx < i < c104_idx), c23_idx + 15)
     w118_idx = j_match.start() if j_match else len(v_domain_seq) - 11
 
-    numbering_dict: Dict[str, str] = {}
+    numbering_dict: dict[str, str] = {}
 
     for i, aa in enumerate(v_domain_seq):
         if i <= c23_idx:
@@ -291,12 +299,12 @@ def _fallback_vdomain_analysis(sequence: str, scheme: str) -> VAnalysisResult:
 
 
 def _extract_regions_from_numbering(
-    numbering: Dict[str, str],
+    numbering: dict[str, str],
     scheme: str = "imgt",
-) -> Tuple[Dict[str, CDRRegion], Dict[str, FrameworkRegion]]:
+) -> tuple[dict[str, CDRRegion], dict[str, FrameworkRegion]]:
     """Separates numbered dictionary into CDR1/2/3 and FR1/2/3/4 regions based on scheme boundaries."""
-    cdrs: Dict[str, CDRRegion] = {}
-    frameworks: Dict[str, FrameworkRegion] = {}
+    cdrs: dict[str, CDRRegion] = {}
+    frameworks: dict[str, FrameworkRegion] = {}
 
     scheme_lower = scheme.lower()
     boundaries = SCHEME_BOUNDARIES.get(scheme_lower, SCHEME_BOUNDARIES["imgt"])

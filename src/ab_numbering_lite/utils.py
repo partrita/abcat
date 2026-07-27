@@ -1,11 +1,11 @@
 import csv
 import io
 from pathlib import Path
-from typing import List, Tuple, Union
-from ab_numbering_lite.schemas import FullChainAnalysis, BatchAnalysisResult
+
+from ab_numbering_lite.schemas import BatchAnalysisResult, FullChainAnalysis
 
 
-def parse_fasta(fasta_content: str) -> List[Tuple[str, str]]:
+def parse_fasta(fasta_content: str) -> list[tuple[str, str]]:
     """Parses a FASTA string into a list of (header, sequence) tuples."""
     records = []
     current_header = None
@@ -29,7 +29,7 @@ def parse_fasta(fasta_content: str) -> List[Tuple[str, str]]:
     return records
 
 
-def read_fasta_file(filepath: Union[str, Path]) -> List[Tuple[str, str]]:
+def read_fasta_file(filepath: str | Path) -> list[tuple[str, str]]:
     """Reads a FASTA file from disk and parses records."""
     path = Path(filepath)
     if not path.exists():
@@ -38,12 +38,12 @@ def read_fasta_file(filepath: Union[str, Path]) -> List[Tuple[str, str]]:
         return parse_fasta(f.read())
 
 
-def export_json(result: Union[FullChainAnalysis, BatchAnalysisResult]) -> str:
+def export_json(result: FullChainAnalysis | BatchAnalysisResult) -> str:
     """Exports Pydantic result model to formatted JSON string."""
     return result.model_dump_json(indent=2)
 
 
-def export_csv(result: Union[FullChainAnalysis, BatchAnalysisResult]) -> str:
+def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
     """Exports analysis results to CSV format."""
     output = io.StringIO()
     writer = csv.writer(output)
@@ -63,7 +63,7 @@ def export_csv(result: Union[FullChainAnalysis, BatchAnalysisResult]) -> str:
     ]
     writer.writerow(headers)
 
-    analyses: List[FullChainAnalysis] = []
+    analyses: list[FullChainAnalysis] = []
     if isinstance(result, BatchAnalysisResult):
         analyses = result.results
     else:

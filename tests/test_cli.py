@@ -1,4 +1,5 @@
 from typer.testing import CliRunner
+
 from ab_numbering_lite.cli import app
 
 runner = CliRunner()

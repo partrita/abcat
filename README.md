@@ -18,7 +18,7 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
    - Isotype 판정: Heavy chain (`IgG`, `IgA`, `IgM`, `IgE`, `IgD`), Light chain (`Kappa`, `Lambda`).
    - Subclass 판정: `IgG1`, `IgG2`, `IgG3`, `IgG4`, `IgA1`, `IgA2`, `IGKC`, `IGLC1`~`IGLC7`.
    - Allotype 및 Isoallotype 판정: IMGT 다형성 위치(Polymorphic positions) 분석을 통한 알로타입 마커 추출.
-     - Heavy chain: `G1m17`, `G1m3`, `G1m1`, `G1m2`, `G1m27`, `G3m5`, `nG1m1` isoallotype 등.
+     - Heavy chain: `G1m17`, `G1m3`, `G1m1`, `G1m2`, `G2m23`, `G3m5`, `nG1m1`, `nG4m(a)`, `nG4m(b)` isoallotypes 등.
      - Light chain: `Km1`, `Km1,2`, `Km2`, `Km3` 등.
 
 3. CLI 및 Python API 지원:
@@ -104,7 +104,11 @@ ab-numbering-lite/
 | IgG1 (CH3)       | `G1m1` vs `nG1m1`         | CH3 IMGT 356, 358 (EU 356, 358) | D356/L358 = G1m1, E356/M358 = nG1m1           |
 | IgG1 (CH3)       | `G1m2`                    | CH3 IMGT 431 (EU 431)           | G431 = G1m2+                                  |
 | IgG2 (CH2)       | `G2m23`                   | CH2 IMGT 282 (EU 282)           | V282 = G2m23+                                 |
+| IgG4 (CH2)       | `nG4m(a)` vs `nG4m(b)`    | CH2 IMGT 115 (EU 309)           | L309 = nG4m(a), V309 = nG4m(b)                |
 | Kappa (CL)       | `Km1` vs `Km1,2` vs `Km3` | CL IMGT 45, 83 (EU 153, 191)    | V45/L83 = Km1, A45/L83 = Km1,2, A45/V83 = Km3 |
+
+> Note on Engineered Antibodies (e.g., Trastuzumab):
+> Trastuzumab의 Heavy Chain Fc는 자연형 G1m1,17 형태가 아닌, CH3 영역이 `E356-M358`로 엔지니어링되어 G1m1 에피토프가 제거된 비정상(allotypic / engineered) 형태입니다. 따라서 판정 시스템은 `G1m17` 알로타입만 감지하며(`G1m17 only`), CH3의 `E356/M358` 서열은 `nG1m1` isoallotype으로 분류됩니다.
 
 ---
 
@@ -156,3 +160,13 @@ print("Kabat CDR3:", v_kabat.cdrs["CDR3"].sequence)
 ## License
 
 [MIT](./LICENSE)
+
+---
+
+## References
+
+- GM Allotypes Reference:
+  Currently testable (serologically) GM allotypes and amino acid substitutions.
+  *J Immunol.* 2025 Dec 1;214(12):3181–3187. doi: [10.1093/jimmun/vkaf190](https://doi.org/10.1093/jimmun/vkaf190).
+- Allelic Diversity & Isoallotypes Reference:
+  Warrender AK, Kelton W. Beyond Allotypes: The Influence of Allelic Diversity in Antibody Constant Domains. *Front Immunol.* 2020 Aug 18;11:2016. doi: [10.3389/fimmu.2020.02016](https://doi.org/10.3389/fimmu.2020.02016). PMID: 32973808; PMCID: PMC7461860.

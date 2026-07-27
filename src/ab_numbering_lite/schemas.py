@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -25,27 +25,27 @@ class FrameworkRegion(BaseModel):
 
 class VAnalysisResult(BaseModel):
     chain_type: ChainType
-    species: Optional[str] = "human"
+    species: str | None = "human"
     scheme: str = "imgt"
-    v_gene_allele: Optional[str] = None
-    j_gene_allele: Optional[str] = None
+    v_gene_allele: str | None = None
+    j_gene_allele: str | None = None
     v_domain_sequence: str
-    numbering: Dict[str, str] = Field(
+    numbering: dict[str, str] = Field(
         default_factory=dict
     )  # {"27": "G", "28": "F", ...}
-    cdrs: Dict[str, CDRRegion] = Field(default_factory=dict)
-    frameworks: Dict[str, FrameworkRegion] = Field(default_factory=dict)
+    cdrs: dict[str, CDRRegion] = Field(default_factory=dict)
+    frameworks: dict[str, FrameworkRegion] = Field(default_factory=dict)
     confidence: float = 1.0
-    error_message: Optional[str] = None
+    error_message: str | None = None
 
 
 class AllotypeMarkerCall(BaseModel):
     allotype: str
-    opposing_allotype: Optional[str] = None
+    opposing_allotype: str | None = None
     category: str = "allotype"  # "allotype" or "isoallotype"
     domain: str  # "CH1", "CH2", "CH3", "CL"
     status: str  # "present", "absent", "inconclusive"
-    matched_residues: Dict[str, str] = Field(default_factory=dict)  # {"EU_214": "K"}
+    matched_residues: dict[str, str] = Field(default_factory=dict)  # {"EU_214": "K"}
 
 
 class CAnalysisResult(BaseModel):
@@ -56,20 +56,20 @@ class CAnalysisResult(BaseModel):
     )
     matched_c_gene: str  # "IGHG1", "IGKC", etc.
     alignment_identity: float
-    allotypes: List[AllotypeMarkerCall] = Field(default_factory=list)
-    isoallotypes: List[AllotypeMarkerCall] = Field(default_factory=list)
+    allotypes: list[AllotypeMarkerCall] = Field(default_factory=list)
+    isoallotypes: list[AllotypeMarkerCall] = Field(default_factory=list)
 
 
 class FullChainAnalysis(BaseModel):
     sequence_id: str
     full_sequence: str
-    v_analysis: Optional[VAnalysisResult] = None
-    c_analysis: Optional[CAnalysisResult] = None
+    v_analysis: VAnalysisResult | None = None
+    c_analysis: CAnalysisResult | None = None
     success: bool = True
-    warnings: List[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
 
 
 class BatchAnalysisResult(BaseModel):
     total_sequences: int
     successful_analyses: int
-    results: List[FullChainAnalysis]
+    results: list[FullChainAnalysis]

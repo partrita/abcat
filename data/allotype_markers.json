@@ -2,31 +2,13 @@
   "heavy": {
     "IgG1": [
       {
-        "allotype": "G1m17",
-        "opposing_allotype": "G1m3",
-        "domain": "CH1",
-        "reference_subclass": "IGHG1",
-        "markers": [
-          { "subclass_offset": 120, "eu_position": 214, "amino_acid": "K" }
-        ]
-      },
-      {
-        "allotype": "G1m3",
-        "opposing_allotype": "G1m17",
-        "domain": "CH1",
-        "reference_subclass": "IGHG1",
-        "markers": [
-          { "subclass_offset": 120, "eu_position": 214, "amino_acid": "R" }
-        ]
-      },
-      {
         "allotype": "G1m1",
         "opposing_allotype": "nG1m1",
         "domain": "CH3",
         "reference_subclass": "IGHG1",
         "markers": [
-          { "subclass_offset": 238, "eu_position": 356, "amino_acid": "D" },
-          { "subclass_offset": 240, "eu_position": 358, "amino_acid": "L" }
+          { "subclass_offset": 239, "eu_position": 356, "amino_acid": "D" },
+          { "subclass_offset": 241, "eu_position": 358, "amino_acid": "L" }
         ]
       },
       {
@@ -36,8 +18,8 @@
         "reference_subclass": "IGHG1",
         "type": "isoallotype",
         "markers": [
-          { "subclass_offset": 238, "eu_position": 356, "amino_acid": "E" },
-          { "subclass_offset": 240, "eu_position": 358, "amino_acid": "M" }
+          { "subclass_offset": 239, "eu_position": 356, "amino_acid": "E" },
+          { "subclass_offset": 241, "eu_position": 358, "amino_acid": "M" }
         ]
       },
       {
@@ -46,18 +28,238 @@
         "domain": "CH3",
         "reference_subclass": "IGHG1",
         "markers": [
-          { "subclass_offset": 313, "eu_position": 431, "amino_acid": "G" }
+          { "subclass_offset": 314, "eu_position": 431, "amino_acid": "G" }
+        ]
+      },
+      {
+        "allotype": "G1m3",
+        "opposing_allotype": "G1m17",
+        "domain": "CH1",
+        "reference_subclass": "IGHG1",
+        "markers": [
+          { "subclass_offset": 82, "eu_position": 199, "amino_acid": "I" },
+          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
+        ]
+      },
+      {
+        "allotype": "G1m17",
+        "opposing_allotype": "G1m3",
+        "domain": "CH1",
+        "reference_subclass": "IGHG1",
+        "markers": [
+          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "K" }
+        ]
+      },
+      {
+        "allotype": "nG1m17",
+        "opposing_allotype": "G1m17",
+        "domain": "CH1",
+        "reference_subclass": "IGHG1",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
         ]
       }
     ],
     "IgG2": [
       {
-        "allotype": "G2m23",
-        "opposing_allotype": null,
+        "allotype": "G2m..",
+        "opposing_allotype": "G2m23",
         "domain": "CH2",
         "reference_subclass": "IGHG2",
         "markers": [
-          { "subclass_offset": 164, "eu_position": 282, "amino_acid": "V" }
+          { "subclass_offset": 165, "eu_position": 282, "amino_acid": "V" }
+        ]
+      },
+      {
+        "allotype": "G2m23",
+        "opposing_allotype": "G2m..",
+        "domain": "CH2",
+        "reference_subclass": "IGHG2",
+        "markers": [
+          { "subclass_offset": 165, "eu_position": 282, "amino_acid": "M" }
+        ]
+      }
+    ],
+    "IgG3": [
+      {
+        "allotype": "G3m5",
+        "opposing_allotype": "nG3m5",
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "R" },
+          { "subclass_offset": 366, "eu_position": 436, "amino_acid": "F" }
+        ]
+      },
+      {
+        "allotype": "nG3m5",
+        "opposing_allotype": "G3m5",
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "H" },
+          { "subclass_offset": 366, "eu_position": 436, "amino_acid": "Y" }
+        ]
+      },
+      {
+        "allotype": "G3m6",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 312, "eu_position": 384, "amino_acid": "S" },
+          { "subclass_offset": 347, "eu_position": 419, "amino_acid": "E" }
+        ]
+      },
+      {
+        "allotype": "G3m10",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 312, "eu_position": 384, "amino_acid": "S" },
+          { "subclass_offset": 350, "eu_position": 422, "amino_acid": "I" }
+        ]
+      },
+      {
+        "allotype": "G3m11",
+        "opposing_allotype": "nG3m11",
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 312, "eu_position": 384, "amino_acid": "S" }
+        ]
+      },
+      {
+        "allotype": "nG3m11",
+        "opposing_allotype": "G3m11",
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 312, "eu_position": 384, "amino_acid": "N" }
+        ]
+      },
+      {
+        "allotype": "G3m13",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 312, "eu_position": 384, "amino_acid": "S" },
+          { "subclass_offset": 347, "eu_position": 419, "amino_acid": "Q" }
+        ]
+      },
+      {
+        "allotype": "G3m14",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 325, "eu_position": 397, "amino_acid": "V" },
+          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "R" },
+          { "subclass_offset": 366, "eu_position": 436, "amino_acid": "F" }
+        ]
+      },
+      {
+        "allotype": "G3m15",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 306, "eu_position": 378, "amino_acid": "M" },
+          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "H" },
+          { "subclass_offset": 366, "eu_position": 436, "amino_acid": "Y" }
+        ]
+      },
+      {
+        "allotype": "G3m16",
+        "opposing_allotype": null,
+        "domain": "CH2",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 220, "eu_position": 292, "amino_acid": "W" }
+        ]
+      },
+      {
+        "allotype": "G3m21",
+        "opposing_allotype": "nG3m21",
+        "domain": "CH2",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 219, "eu_position": 291, "amino_acid": "L" }
+        ]
+      },
+      {
+        "allotype": "nG3m21",
+        "opposing_allotype": "G3m21",
+        "domain": "CH2",
+        "reference_subclass": "IGHG3",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 219, "eu_position": 291, "amino_acid": "P" }
+        ]
+      },
+      {
+        "allotype": "G3m24",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 312, "eu_position": 384, "amino_acid": "S" },
+          { "subclass_offset": 350, "eu_position": 422, "amino_acid": "V" }
+        ]
+      },
+      {
+        "allotype": "G3m26",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "R" }
+        ]
+      },
+      {
+        "allotype": "G3m27",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 350, "eu_position": 422, "amino_acid": "I" }
+        ]
+      },
+      {
+        "allotype": "G3m28",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG3",
+        "markers": [
+          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "R" },
+          { "subclass_offset": 366, "eu_position": 436, "amino_acid": "Y" }
+        ]
+      }
+    ],
+    "IgG4": [
+      {
+        "allotype": "nG4m(a)",
+        "opposing_allotype": "nG4m(b)",
+        "domain": "CH2",
+        "reference_subclass": "IGHG4",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 193, "eu_position": 309, "amino_acid": "L" }
+        ]
+      },
+      {
+        "allotype": "nG4m(b)",
+        "opposing_allotype": "nG4m(a)",
+        "domain": "CH2",
+        "reference_subclass": "IGHG4",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 193, "eu_position": 309, "amino_acid": "V" }
         ]
       }
     ]
@@ -71,7 +273,7 @@
         "reference_subclass": "IGKC",
         "markers": [
           { "subclass_offset": 45, "eu_position": 153, "amino_acid": "V" },
-          { "subclass_offset": 83, "eu_position": 191, "amino_acid": "L" }
+          { "subclass_offset": 84, "eu_position": 191, "amino_acid": "L" }
         ]
       },
       {
@@ -81,7 +283,7 @@
         "reference_subclass": "IGKC",
         "markers": [
           { "subclass_offset": 45, "eu_position": 153, "amino_acid": "A" },
-          { "subclass_offset": 83, "eu_position": 191, "amino_acid": "L" }
+          { "subclass_offset": 84, "eu_position": 191, "amino_acid": "L" }
         ]
       },
       {
@@ -91,7 +293,7 @@
         "reference_subclass": "IGKC",
         "markers": [
           { "subclass_offset": 45, "eu_position": 153, "amino_acid": "A" },
-          { "subclass_offset": 83, "eu_position": 191, "amino_acid": "V" }
+          { "subclass_offset": 84, "eu_position": 191, "amino_acid": "V" }
         ]
       }
     ]

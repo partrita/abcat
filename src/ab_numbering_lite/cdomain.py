@@ -1,21 +1,22 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Any
+
 from Bio.Align import PairwiseAligner
 
-from ab_numbering_lite.schemas import CAnalysisResult, AllotypeMarkerCall, ChainType
+from ab_numbering_lite.schemas import AllotypeMarkerCall, CAnalysisResult, ChainType
 
 logger = logging.getLogger(__name__)
 
 # Data directory path
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
-_C_GENE_DB: Optional[Dict[str, Any]] = None
-_ALLOTYPE_DB: Optional[Dict[str, Any]] = None
+_C_GENE_DB: dict[str, Any] | None = None
+_ALLOTYPE_DB: dict[str, Any] | None = None
 
 
-def _load_databases() -> Tuple[Dict[str, Any], Dict[str, Any]]:
+def _load_databases() -> tuple[dict[str, Any], dict[str, Any]]:
     global _C_GENE_DB, _ALLOTYPE_DB
     if _C_GENE_DB is None or _ALLOTYPE_DB is None:
         c_gene_path = DATA_DIR / "human_c_genes.json"
@@ -39,7 +40,7 @@ def _load_databases() -> Tuple[Dict[str, Any], Dict[str, Any]]:
 def analyze_cdomain(
     sequence: str,
     v_domain_len: int = 0,
-    chain_hint: Optional[ChainType] = None,
+    chain_hint: ChainType | None = None,
 ) -> CAnalysisResult:
     """
     Analyzes the Constant Domain of an antibody sequence.
@@ -129,16 +130,34 @@ def analyze_cdomain(
     )
 
 
+def _get_query_index_for_ref_offset(
+    alignment: Any, ref_idx: int, default_len: int
+) -> int | None:
+    """
+    Maps 0-indexed reference C-gene position (ref_idx) to 0-indexed position in query_c_seq using PairwiseAligner alignment.
+    alignment.aligned[0] is query blocks, alignment.aligned[1] is target (ref) blocks.
+    """
+    if hasattr(alignment, "aligned") and len(alignment.aligned) >= 2:
+        query_blocks, ref_blocks = alignment.aligned[0], alignment.aligned[1]
+        for (q_start, q_end), (r_start, r_end) in zip(query_blocks, ref_blocks):
+            if r_start <= ref_idx < r_end:
+                return q_start + (ref_idx - r_start)
+        return None
+    if 0 <= ref_idx < default_len:
+        return ref_idx
+    return None
+
+
 def _call_allotypes(
     query_c_seq: str,
     matched_subclass: str,
     chain_category: str,
-    allotype_db: Dict[str, Any],
+    allotype_db: dict[str, Any],
     alignment: Any,
-) -> Tuple[List[AllotypeMarkerCall], List[AllotypeMarkerCall]]:
+) -> tuple[list[AllotypeMarkerCall], list[AllotypeMarkerCall]]:
     """Scans key polymorphic position markers to assign Allotypes and Isoallotypes."""
-    allotypes: List[AllotypeMarkerCall] = []
-    isoallotypes: List[AllotypeMarkerCall] = []
+    allotypes: list[AllotypeMarkerCall] = []
+    isoallotypes: list[AllotypeMarkerCall] = []
 
     subclass_markers = allotype_db.get(chain_category, {}).get(matched_subclass, [])
     if not subclass_markers:
@@ -156,12 +175,18 @@ def _call_allotypes(
         all_matched = True
 
         for m in markers:
-            offset = m["subclass_offset"] - 1  # 0-indexed offset in C-region
+            ref_offset = (
+                m["subclass_offset"] - 1
+            )  # 0-indexed offset in reference C-gene
             expected_aa = m["amino_acid"]
             eu_pos = m["eu_position"]
 
-            if 0 <= offset < len(query_c_seq):
-                actual_aa = query_c_seq[offset]
+            query_idx = _get_query_index_for_ref_offset(
+                alignment, ref_offset, len(query_c_seq)
+            )
+
+            if query_idx is not None and 0 <= query_idx < len(query_c_seq):
+                actual_aa = query_c_seq[query_idx]
                 matches[f"EU_{eu_pos}"] = actual_aa
                 if actual_aa != expected_aa:
                     all_matched = False

@@ -1,12 +1,13 @@
 from pathlib import Path
-from typing import Optional
+from typing import Annotated
+
 import typer
 from rich.console import Console
 from rich.table import Table
 
-from ab_numbering_lite import analyze_chain, analyze_vdomain, analyze_cdomain
+from ab_numbering_lite import analyze_cdomain, analyze_chain, analyze_vdomain
 from ab_numbering_lite.schemas import BatchAnalysisResult
-from ab_numbering_lite.utils import read_fasta_file, export_json, export_csv
+from ab_numbering_lite.utils import export_csv, export_json, read_fasta_file
 
 app = typer.Typer(
     name="abnl",
@@ -18,23 +19,29 @@ console = Console()
 
 @app.command("analyze")
 def analyze_command(
-    sequence: Optional[str] = typer.Option(
-        None, "--sequence", "-s", help="Single amino acid sequence"
-    ),
-    input_file: Optional[Path] = typer.Option(
-        None, "--input", "-i", help="Path to input FASTA file"
-    ),
-    output: Optional[Path] = typer.Option(
-        None, "--output", "-o", help="Output file path"
-    ),
-    output_format: str = typer.Option(
-        "json", "--format", "-f", help="Output format: json or csv"
-    ),
-    scheme: str = typer.Option(
-        "imgt",
-        "--scheme",
-        help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
-    ),
+    sequence: Annotated[
+        str | None,
+        typer.Option("--sequence", "-s", help="Single amino acid sequence"),
+    ] = None,
+    input_file: Annotated[
+        Path | None,
+        typer.Option("--input", "-i", help="Path to input FASTA file"),
+    ] = None,
+    output: Annotated[
+        Path | None,
+        typer.Option("--output", "-o", help="Output file path"),
+    ] = None,
+    output_format: Annotated[
+        str,
+        typer.Option("--format", "-f", help="Output format: json or csv"),
+    ] = "json",
+    scheme: Annotated[
+        str,
+        typer.Option(
+            "--scheme",
+            help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
+        ),
+    ] = "imgt",
 ):
     """Analyzes antibody chain sequence(s) for V-domain CDRs and Constant region Allotypes."""
     records = []
@@ -75,18 +82,25 @@ def analyze_command(
 
 @app.command("batch")
 def batch_command(
-    input_file: Path = typer.Option(
-        ..., "--input", "-i", help="Path to input FASTA file"
-    ),
-    output: Path = typer.Option(..., "--output", "-o", help="Output file path"),
-    output_format: str = typer.Option(
-        "csv", "--format", "-f", help="Output format: csv or json"
-    ),
-    scheme: str = typer.Option(
-        "imgt",
-        "--scheme",
-        help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
-    ),
+    input_file: Annotated[
+        Path,
+        typer.Option("--input", "-i", help="Path to input FASTA file"),
+    ],
+    output: Annotated[
+        Path,
+        typer.Option("--output", "-o", help="Output file path"),
+    ],
+    output_format: Annotated[
+        str,
+        typer.Option("--format", "-f", help="Output format: csv or json"),
+    ] = "csv",
+    scheme: Annotated[
+        str,
+        typer.Option(
+            "--scheme",
+            help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
+        ),
+    ] = "imgt",
 ):
     """Batch processes a FASTA file of antibody sequences."""
     if not input_file.exists():
@@ -118,13 +132,21 @@ def batch_command(
 
 @app.command("vdomain")
 def vdomain_command(
-    sequence: Optional[str] = typer.Option(None, "--sequence", "-s"),
-    input_file: Optional[Path] = typer.Option(None, "--input", "-i"),
-    scheme: str = typer.Option(
-        "imgt",
-        "--scheme",
-        help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
-    ),
+    sequence: Annotated[
+        str | None,
+        typer.Option("--sequence", "-s"),
+    ] = None,
+    input_file: Annotated[
+        Path | None,
+        typer.Option("--input", "-i"),
+    ] = None,
+    scheme: Annotated[
+        str,
+        typer.Option(
+            "--scheme",
+            help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
+        ),
+    ] = "imgt",
 ):
     """Runs ANARCII V-domain numbering and CDR extraction only."""
     seq_str = sequence
