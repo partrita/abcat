@@ -1,5 +1,5 @@
-from ab_numbering_lite.schemas import ChainType
-from ab_numbering_lite.vdomain import analyze_vdomain
+from abmap.schemas import ChainType
+from abmap.vdomain import analyze_vdomain
 
 TRASTUZUMAB_VH = (
     "EVQLVESGGGLVQPGGSLRLSCAASGFTFTDYTMDWVRQAPGKGLEWVADVNPNSGGSIYNQRFKGRFTLS"
@@ -40,3 +40,17 @@ def test_vdomain_alternate_schemes():
         res = analyze_vdomain(TRASTUZUMAB_VH, scheme=scheme)
         assert res.scheme == scheme
         assert res.chain_type == ChainType.HEAVY
+
+
+def test_vdomain_multiline_sequence():
+    multiline_seq = (
+        "EVQLVESGGGLVQPGGSLRLSCAASGFTFT\n"
+        "DYTMDWVRQAPGKGLEWVADVNPNSGGSIY\r\n"
+        "\tNQRFKGRFTLSVDRSKNTLYLQMNSLRAED\n"
+        "TAVYYCARNLGPSFYFDYWGQGTLVTVSS"
+    )
+    single_res = analyze_vdomain(TRASTUZUMAB_VH, scheme="imgt")
+    multi_res = analyze_vdomain(multiline_seq, scheme="imgt")
+    assert multi_res.chain_type == single_res.chain_type
+    assert multi_res.v_domain_sequence == single_res.v_domain_sequence
+    assert multi_res.cdrs["CDR3"].sequence == single_res.cdrs["CDR3"].sequence

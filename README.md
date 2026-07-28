@@ -1,10 +1,8 @@
-# ab-numbering-lite
+# abmap
 
-`ab-numbering-lite`는 [ANARCII](https://github.com/oxpig/ANARCII)를 핵심 의존성으로 활용하여 항체 Heavy chain 및 Light chain 서열의 Variable Domain(VH, VL) 및 Constant Domain(CH1, CH2, CH3, CL)을 통합 분석하는 Python CLI/라이브러리 도구입니다.
+`abmap`는 [ANARCII](https://github.com/oxpig/ANARCII)를 핵심 의존성으로 활용하여 항체 Heavy chain 및 Light chain 서열의 Variable Domain(VH, VL) 및 Constant Domain(CH1, CH2, CH3, CL)을 통합 분석하는 Python CLI/라이브러리 도구입니다.
 
 Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Chothia 등) 및 CDR1, CDR2, CDR3 루프 분리를 수행하고, Constant Domain에 대해서는 정밀 서열 비교를 통해 Isotype, Subclass, Isoallotype, Allotype을 판정합니다.
-
----
 
 ## Key Features
 
@@ -25,8 +23,6 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
    - 단일 서열 및 FASTA 배치 파일 분석 지원.
    - CSV, JSON, 콘솔 테이블 형태의 풍부한 리포팅.
 
----
-
 ## Tech Stack
 
 - Python: 3.14+
@@ -36,8 +32,6 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
 - Data Models: `pydantic`
 - CLI Framework: `typer` / `rich`
 - Testing & Quality: `pytest`, `ruff`, `mypy`
-
----
 
 ## Architecture & Workflow
 
@@ -67,35 +61,6 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
             └──────────────────────────┘
 ```
 
----
-
-## Project Structure
-
-```text
-ab-numbering-lite/
-├── pyproject.toml
-├── README.md
-├── src/
-│   └── ab_numbering_lite/
-│       ├── __init__.py
-│       ├── cli.py
-│       ├── vdomain.py           # ANARCII integration for V-domain & CDRs
-│       ├── cdomain.py           # Isotype, Subclass, Allotype & Isoallotype engine
-│       ├── schemas.py           # Pydantic models for V & C annotations
-│       └── utils.py             # FASTA parsing & export tools
-├── data/
-│   ├── human_c_genes.json       # IMGT reference constant sequences
-│   └── allotype_markers.json    # Polymorphic residues for G1m, G2m, G3m, Km allotypes
-├── tests/
-│   ├── test_vdomain.py
-│   ├── test_cdomain.py
-│   └── test_cli.py
-└── examples/
-    └── full_antibodies.fasta
-```
-
----
-
 ## Key Allotype Fingerprints (Reference)
 
 | Subclass / Chain | Marker / Allotype         | IMGT Position / Sequence Motif  | Key Polymorphisms                             |
@@ -110,30 +75,38 @@ ab-numbering-lite/
 > Note on Engineered Antibodies (e.g., Trastuzumab):
 > Trastuzumab의 Heavy Chain Fc는 자연형 G1m1,17 형태가 아닌, CH3 영역이 `E356-M358`로 엔지니어링되어 G1m1 에피토프가 제거된 비정상(allotypic / engineered) 형태입니다. 따라서 판정 시스템은 `G1m17` 알로타입만 감지하며(`G1m17 only`), CH3의 `E356/M358` 서열은 `nG1m1` isoallotype으로 분류됩니다.
 
----
-
 ## CLI & Python API Usage Example
 
 ### 1. CLI Examples
 
 ```bash
 # 기본 분석 (IMGT scheme)
-uv run abnl analyze --sequence EVQLVESGGGLVQPGGSLRLSCAASGFTFSDHYMDWVRQAPGKGLEWVGRIRSKANSYATAYAASVKGRFTISRDDSKNTLYLQMNSLRAEDTAVYYCARFDAYWGQGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSCDKTHTCPPCPAPELLGGPSVFLFPPKPKDTLMISRTPEVTCVVVDVSHEDPEVKFNWYVDGVEVHNAKTKPREEQYNSTYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSRDELTKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQQGNVFSCSVMHEALHNHYTQKSLSLSPGK
+uv run abmap analyze --sequence EVQLVESGGGLVQPGGSLRLSCAASGFTFSDHYMDWVRQAPGKGLEWVGRIRSKANSYATAYAASVKGRFTISRDDSKNTLYLQMNSLRAEDTAVYYCARFDAYWGQGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSCDKTHTCPPCPAPELLGGPSVFLFPPKPKDTLMISRTPEVTCVVVDVSHEDPEVKFNWYVDGVEVHNAKTKPREEQYNSTYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSRDELTKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQQGNVFSCSVMHEALHNHYTQKSLSLSPGK
+
+# 줄바꿈이 포함된 서열 분석 (큰따옴표 "..." 로 감싸서 입력)
+uv run abmap analyze --sequence "EVQLLESGGGLVQPGGSLRLSCAASGIDLSTYAMGWVRQAPGKGLEWVGLIHRSGRTYYA
+TWAKGRFTISKDSSKNTLYLQMNSLRAEDTAVYYCTRSYPDYSATASIWGQGTTVTVSSA
+STKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSG
+LYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSCDKTHTCPPCPAPELLGGP
+SVFLFPPKPKDTLMISRTPEVTCVVVDVSHEDPEVKFNWYVDGVEVHNAKTKPREEQYNS
+TYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSREEM
+TKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQ
+QGNVFSCSVMHEALHNHYTQKSLSLSPGK"
 
 # 넘버링 체계(Scheme) 변경 예제 (imgt, kabat, martin, chothia, aho 지원)
-uv run abnl analyze --sequence EVQLVES... --scheme kabat
-uv run abnl vdomain --sequence EVQLVES... --scheme martin
-uv run abnl vdomain --sequence EVQLVES... --scheme chothia
-uv run abnl vdomain --sequence EVQLVES... --scheme aho
+uv run abmap analyze --sequence EVQLVES... --scheme kabat
+uv run abmap vdomain --sequence EVQLVES... --scheme martin
+uv run abmap vdomain --sequence EVQLVES... --scheme chothia
+uv run abmap vdomain --sequence EVQLVES... --scheme aho
 
 # FASTA 배치 파일 분석 및 CSV 저장
-uv run abnl batch --input examples/full_antibodies.fasta --output results.csv --format csv --scheme imgt
+uv run abmap batch --input examples/full_antibodies.fasta --output results.csv --format csv --scheme imgt
 ```
 
 ### 2. Python API Example
 
 ```python
-from ab_numbering_lite import analyze_chain, analyze_vdomain
+from abmap import analyze_chain, analyze_vdomain
 
 seq = "EVQLVESGGGLVQPGGSLRLSCAASGFTFSDHYMDWVRQAPGKGLEWVGRIRSKANSYATAYAASVKGRFTISRDDSKNTLYLQMNSLRAEDTAVYYCARFDAYWGQGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSCDKTHTCPPCPAPELLGGPSVFLFPPKPKDTLMISRTPEVTCVVVDVSHEDPEVKFNWYVDGVEVHNAKTKPREEQYNSTYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSRDELTKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQQGNVFSCSVMHEALHNHYTQKSLSLSPGK"
 
@@ -149,19 +122,13 @@ v_kabat = analyze_vdomain(seq, scheme="kabat")
 print("Kabat CDR3:", v_kabat.cdrs["CDR3"].sequence)
 ```
 
----
-
 ## PyPI Deployment (GitHub Actions)
 
 본 프로젝트는 GitHub Release 발급 시 `uv build`를 실행하고, PyPI Trusted Publisher (OIDC)를 통해 최신 버전을 PyPI에 자동 게시하는 GitHub Action 워크플로우를 제공합니다.
 
----
-
 ## License
 
 [MIT](./LICENSE)
-
----
 
 ## References
 

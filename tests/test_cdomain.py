@@ -1,5 +1,5 @@
-from ab_numbering_lite.cdomain import analyze_cdomain
-from ab_numbering_lite.schemas import ChainType
+from abmap.cdomain import analyze_cdomain
+from abmap.schemas import ChainType
 
 TRASTUZUMAB_HEAVY_FULL = (
     "EVQLVESGGGLVQPGGSLRLSCAASGFTFTDYTMDWVRQAPGKGLEWVADVNPNSGGSIYNQRFKGRFTLSVDRSKNTLYLQ"

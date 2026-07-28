@@ -1,5 +1,5 @@
 [project]
-name = "ab-numbering-lite"
+name = "abmap"
 version = "0.1.0"
 description = "Antibody V-domain CDR analysis (via ANARCII) and Constant region Isotype/Subclass/Allotype classification tool"
 readme = "README.md"
@@ -30,8 +30,7 @@ dev = [
 ]
 
 [project.scripts]
-abnl = "ab_numbering_lite.cli:app"
-ab-numbering-lite = "ab_numbering_lite.cli:app"
+abmap = "abmap.cli:app"
 
 [build-system]
 requires = ["uv_build>=0.11.30,<0.12.0"]

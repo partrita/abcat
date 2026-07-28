@@ -1,6 +1,6 @@
-from ab_numbering_lite.cdomain import analyze_cdomain
-from ab_numbering_lite.schemas import BatchAnalysisResult, FullChainAnalysis
-from ab_numbering_lite.vdomain import analyze_vdomain
+from abmap.cdomain import analyze_cdomain
+from abmap.schemas import BatchAnalysisResult, FullChainAnalysis
+from abmap.vdomain import analyze_vdomain
 
 
 def analyze_chain(

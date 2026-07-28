@@ -3,12 +3,13 @@ from typing import Any
 
 from Bio.Align import PairwiseAligner
 
-from ab_numbering_lite.schemas import (
+from abmap.schemas import (
     CDRRegion,
     ChainType,
     FrameworkRegion,
     VAnalysisResult,
 )
+from abmap.utils import clean_sequence
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +75,7 @@ def analyze_vdomain(sequence: str, scheme: str = "imgt") -> VAnalysisResult:
     Analyzes the variable domain of an antibody sequence using ANARCII (with fallback alignment).
     Extracts numbering (imgt, kabat, martin, chothia, aho), chain type, CDR1/2/3, and FR1/2/3/4 regions.
     """
-    cleaned_seq = sequence.strip().upper().replace(" ", "").replace("\n", "")
+    cleaned_seq = clean_sequence(sequence)
     scheme_lower = scheme.lower()
     if scheme_lower not in VALID_SCHEMES:
         logger.warning(

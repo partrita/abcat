@@ -2,7 +2,25 @@ import csv
 import io
 from pathlib import Path
 
-from ab_numbering_lite.schemas import BatchAnalysisResult, FullChainAnalysis
+from abmap.schemas import BatchAnalysisResult, FullChainAnalysis
+
+
+def clean_sequence(seq: str) -> str:
+    """Cleans an input amino acid sequence by removing whitespace, line breaks, tabs, non-alphabet characters, and FASTA header if present."""
+    if not seq:
+        return ""
+    import re
+
+    lines = seq.strip().splitlines()
+    filtered_lines = []
+    for line in lines:
+        line_str = line.strip()
+        if line_str.startswith(">"):
+            continue
+        filtered_lines.append(line_str)
+
+    raw = "".join(filtered_lines)
+    return "".join(re.findall(r"[A-Za-z]+", raw)).upper()
 
 
 def parse_fasta(fasta_content: str) -> list[tuple[str, str]]:
@@ -17,14 +35,14 @@ def parse_fasta(fasta_content: str) -> list[tuple[str, str]]:
             continue
         if line.startswith(">"):
             if current_header:
-                records.append((current_header, "".join(current_seq)))
+                records.append((current_header, clean_sequence("".join(current_seq))))
             current_header = line[1:].strip()
             current_seq = []
         else:
             current_seq.append(line)
 
     if current_header:
-        records.append((current_header, "".join(current_seq)))
+        records.append((current_header, clean_sequence("".join(current_seq))))
 
     return records
 

@@ -5,7 +5,8 @@ from typing import Any
 
 from Bio.Align import PairwiseAligner
 
-from ab_numbering_lite.schemas import AllotypeMarkerCall, CAnalysisResult, ChainType
+from abmap.schemas import AllotypeMarkerCall, CAnalysisResult, ChainType
+from abmap.utils import clean_sequence
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ def analyze_cdomain(
     Analyzes the Constant Domain of an antibody sequence.
     Determines Isotype, Subclass, Isoallotype, and Allotype markers.
     """
-    cleaned = sequence.strip().upper().replace(" ", "").replace("\n", "")
+    cleaned = clean_sequence(sequence)
 
     # Extract constant domain sequence if full sequence is provided
     if v_domain_len > 0 and len(cleaned) > v_domain_len:

@@ -5,13 +5,18 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from ab_numbering_lite import analyze_cdomain, analyze_chain, analyze_vdomain
-from ab_numbering_lite.schemas import BatchAnalysisResult
-from ab_numbering_lite.utils import export_csv, export_json, read_fasta_file
+from abmap import analyze_cdomain, analyze_chain, analyze_vdomain
+from abmap.schemas import BatchAnalysisResult
+from abmap.utils import (
+    clean_sequence,
+    export_csv,
+    export_json,
+    read_fasta_file,
+)
 
 app = typer.Typer(
-    name="abnl",
-    help="ab-numbering-lite: ANARCII V-domain CDR analyzer and Constant domain Allotype classifier",
+    name="abmap",
+    help="abmap: ANARCII V-domain CDR analyzer and Constant domain Allotype classifier",
     add_completion=False,
 )
 console = Console()
@@ -47,7 +52,7 @@ def analyze_command(
     records = []
 
     if sequence:
-        records.append(("query", sequence))
+        records.append(("query", clean_sequence(sequence)))
     elif input_file and input_file.exists():
         records = read_fasta_file(input_file)
     else:
@@ -149,7 +154,7 @@ def vdomain_command(
     ] = "imgt",
 ):
     """Runs ANARCII V-domain numbering and CDR extraction only."""
-    seq_str = sequence
+    seq_str = clean_sequence(sequence) if sequence else None
     if not seq_str and input_file and input_file.exists():
         records = read_fasta_file(input_file)
         seq_str = records[0][1]
@@ -178,7 +183,7 @@ def cdomain_command(
     ),
 ):
     """Runs Constant Region Isotype, Subclass, and Allotype analysis only."""
-    res = analyze_cdomain(sequence)
+    res = analyze_cdomain(clean_sequence(sequence))
     console.print(f"[bold green]Isotype:[/bold green] {res.isotype}")
     console.print(f"[bold green]Subclass:[/bold green] {res.subclass}")
     console.print(f"[bold green]Matched Gene:[/bold green] {res.matched_c_gene}")
