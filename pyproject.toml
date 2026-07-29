@@ -1,5 +1,5 @@
 [project]
-name = "abmap"
+name = "abcat"
 version = "0.1.0"
 description = "Antibody V-domain CDR analysis (via ANARCII) and Constant region Isotype/Subclass/Allotype classification tool"
 readme = "README.md"
@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.scripts]
-abmap = "abmap.cli:app"
+abcat = "abcat.cli:app"
 
 [build-system]
 requires = ["uv_build>=0.11.30,<0.12.0"]

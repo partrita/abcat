@@ -59,6 +59,25 @@
         "markers": [
           { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
         ]
+      },
+      {
+        "allotype": "G1m27",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG1",
+        "markers": [
+          { "subclass_offset": 305, "eu_position": 422, "amino_acid": "I" }
+        ]
+      },
+      {
+        "allotype": "G1m28",
+        "opposing_allotype": null,
+        "domain": "CH3",
+        "reference_subclass": "IGHG1",
+        "markers": [
+          { "subclass_offset": 318, "eu_position": 435, "amino_acid": "R" },
+          { "subclass_offset": 319, "eu_position": 436, "amino_acid": "Y" }
+        ]
       }
     ],
     "IgG2": [
@@ -218,7 +237,7 @@
         "domain": "CH3",
         "reference_subclass": "IGHG3",
         "markers": [
-          { "subclass_offset": 365, "eu_position": 435, "amino_acid": "R" }
+          { "subclass_offset": 366, "eu_position": 436, "amino_acid": "R" }
         ]
       },
       {
@@ -260,6 +279,48 @@
         "type": "isoallotype",
         "markers": [
           { "subclass_offset": 193, "eu_position": 309, "amino_acid": "V" }
+        ]
+      }
+    ],
+    "IgE": [
+      {
+        "allotype": "IGHE*01",
+        "opposing_allotype": null,
+        "domain": "CH1",
+        "reference_subclass": "IGHE",
+        "markers": [
+          { "subclass_offset": 43, "eu_position": 141, "amino_acid": "C" },
+          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "W" }
+        ]
+      },
+      {
+        "allotype": "IGHE*02",
+        "opposing_allotype": null,
+        "domain": "CH1",
+        "reference_subclass": "IGHE",
+        "markers": [
+          { "subclass_offset": 43, "eu_position": 141, "amino_acid": "W" },
+          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "W" }
+        ]
+      },
+      {
+        "allotype": "IGHE*03",
+        "opposing_allotype": null,
+        "domain": "CH2",
+        "reference_subclass": "IGHE",
+        "markers": [
+          { "subclass_offset": 43, "eu_position": 141, "amino_acid": "C" },
+          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "L" }
+        ]
+      },
+      {
+        "allotype": "IGHE*04",
+        "opposing_allotype": null,
+        "domain": "CH1",
+        "reference_subclass": "IGHE",
+        "markers": [
+          { "subclass_offset": 43, "eu_position": 141, "amino_acid": "W" },
+          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "W" }
         ]
       }
     ]

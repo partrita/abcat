@@ -1,5 +1,5 @@
-from abmap.schemas import ChainType
-from abmap.vdomain import analyze_vdomain
+from abcat.schemas import ChainType
+from abcat.vdomain import analyze_vdomain
 
 TRASTUZUMAB_VH = (
     "EVQLVESGGGLVQPGGSLRLSCAASGFTFTDYTMDWVRQAPGKGLEWVADVNPNSGGSIYNQRFKGRFTLS"

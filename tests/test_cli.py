@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 
-from abmap.cli import app
+from abcat.cli import app
 
 runner = CliRunner()
 
@@ -36,8 +36,8 @@ def test_cli_cdomain():
 
 
 def test_export_csv():
-    from abmap import analyze_chain
-    from abmap.utils import export_csv
+    from abcat import analyze_chain
+    from abcat.utils import export_csv
 
     res = analyze_chain(TRASTUZUMAB_VH, sequence_id="test1")
     csv_out = export_csv(res)

@@ -7,7 +7,7 @@ resolution-markers = [
 ]
 
 [[package]]
-name = "abmap"
+name = "abcat"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
