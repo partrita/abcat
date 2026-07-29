@@ -87,7 +87,7 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
 PyPI에서 `abcat` 패키지를 직접 설치하여 바로 사용하실 수 있습니다:
 
 ```bash
-pip install abcat
+uv pip install abcat
 ```
 
 ### 2. Development Setup (using `uv`)
