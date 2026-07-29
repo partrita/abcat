@@ -2,6 +2,35 @@
   "heavy": {
     "IgG1": [
       {
+        "allotype": "G1m17",
+        "opposing_allotype": "G1m3",
+        "domain": "CH1",
+        "reference_subclass": "IGHG1",
+        "markers": [
+          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "K" }
+        ]
+      },
+      {
+        "allotype": "G1m3",
+        "opposing_allotype": "G1m17",
+        "domain": "CH1",
+        "reference_subclass": "IGHG1",
+        "markers": [
+          { "subclass_offset": 82, "eu_position": 199, "amino_acid": "I" },
+          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
+        ]
+      },
+      {
+        "allotype": "nG1m17",
+        "opposing_allotype": "G1m17",
+        "domain": "CH1",
+        "reference_subclass": "IGHG1",
+        "type": "isoallotype",
+        "markers": [
+          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
+        ]
+      },
+      {
         "allotype": "G1m1",
         "opposing_allotype": "nG1m1",
         "domain": "CH3",
@@ -29,35 +58,6 @@
         "reference_subclass": "IGHG1",
         "markers": [
           { "subclass_offset": 314, "eu_position": 431, "amino_acid": "G" }
-        ]
-      },
-      {
-        "allotype": "G1m3",
-        "opposing_allotype": "G1m17",
-        "domain": "CH1",
-        "reference_subclass": "IGHG1",
-        "markers": [
-          { "subclass_offset": 82, "eu_position": 199, "amino_acid": "I" },
-          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
-        ]
-      },
-      {
-        "allotype": "G1m17",
-        "opposing_allotype": "G1m3",
-        "domain": "CH1",
-        "reference_subclass": "IGHG1",
-        "markers": [
-          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "K" }
-        ]
-      },
-      {
-        "allotype": "nG1m17",
-        "opposing_allotype": "G1m17",
-        "domain": "CH1",
-        "reference_subclass": "IGHG1",
-        "type": "isoallotype",
-        "markers": [
-          { "subclass_offset": 97, "eu_position": 214, "amino_acid": "R" }
         ]
       },
       {

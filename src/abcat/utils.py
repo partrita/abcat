@@ -93,18 +93,17 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
         isotype = item.c_analysis.isotype if item.c_analysis else "Unknown"
         subclass = item.c_analysis.subclass if item.c_analysis else "Unknown"
 
-        present_allotypes = [
-            a.allotype
-            for a in (item.c_analysis.allotypes if item.c_analysis else [])
-            if a.status == "present"
-        ]
         present_isoallotypes = [
             a.allotype
             for a in (item.c_analysis.isoallotypes if item.c_analysis else [])
             if a.status == "present"
         ]
 
-        allotype_str = ";".join(present_allotypes) if present_allotypes else "None"
+        allotype_str = (
+            item.c_analysis.allotype_summary
+            if (item.c_analysis and item.c_analysis.allotype_summary)
+            else "None"
+        )
         isoallotype_str = (
             ";".join(present_isoallotypes) if present_isoallotypes else "None"
         )

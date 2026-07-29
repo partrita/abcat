@@ -120,6 +120,9 @@ def analyze_cdomain(
         alignment=best_alignment,
     )
 
+    present_allotypes = [a.allotype for a in allotype_calls if a.status == "present"]
+    summary_str = format_allotype_summary(present_allotypes)
+
     return CAnalysisResult(
         c_region_sequence=c_seq,
         isotype=isotype,
@@ -128,7 +131,41 @@ def analyze_cdomain(
         alignment_identity=identity,
         allotypes=allotype_calls,
         isoallotypes=isoallotype_calls,
+        allotype_summary=summary_str,
     )
+
+
+def format_allotype_summary(present_allotypes: list[str]) -> str:
+    """Formats a list of present allotype names into IMGT notation (e.g. G1m17,1)."""
+    if not present_allotypes:
+        return "None"
+
+    import re
+
+    groups: dict[str, list[str]] = {}
+    for allo in present_allotypes:
+        match = re.match(r"^([A-Za-z]+[0-9]*m|\w+[\*\_]?)(.*)$", allo)
+        if match:
+            prefix, suffix = match.groups()
+            if prefix not in groups:
+                groups[prefix] = []
+            groups[prefix].append(suffix)
+        else:
+            if "other" not in groups:
+                groups["other"] = []
+            groups["other"].append(allo)
+
+    formatted_parts = []
+    for prefix, suffixes in groups.items():
+        if prefix == "other":
+            formatted_parts.extend(suffixes)
+        elif len(suffixes) == 1:
+            formatted_parts.append(f"{prefix}{suffixes[0]}")
+        else:
+            joined_suffixes = ",".join(suffixes)
+            formatted_parts.append(f"{prefix}{joined_suffixes}")
+
+    return ", ".join(formatted_parts)
 
 
 def _get_query_index_for_ref_offset(

@@ -188,8 +188,12 @@ def cdomain_command(
     console.print(f"[bold green]Subclass:[/bold green] {res.subclass}")
     console.print(f"[bold green]Matched Gene:[/bold green] {res.matched_c_gene}")
 
+    if res.allotype_summary != "None":
+        console.print(
+            f"[bold yellow]Allotype Summary:[/bold yellow] {res.allotype_summary}"
+        )
     if res.allotypes:
-        console.print("[bold yellow]Allotypes:[/bold yellow]")
+        console.print("[bold yellow]Allotype Markers:[/bold yellow]")
         for a in res.allotypes:
             status_color = "green" if a.status == "present" else "dim"
             console.print(
@@ -215,14 +219,9 @@ def _render_rich_table(results):
         iso = r.c_analysis.isotype if r.c_analysis else "-"
         sub = r.c_analysis.subclass if r.c_analysis else "-"
         allos = (
-            ",".join(
-                [
-                    a.allotype
-                    for a in (r.c_analysis.allotypes if r.c_analysis else [])
-                    if a.status == "present"
-                ]
-            )
-            or "None"
+            r.c_analysis.allotype_summary
+            if (r.c_analysis and r.c_analysis.allotype_summary)
+            else "None"
         )
         cdr1 = (
             r.v_analysis.cdrs.get("CDR1").sequence

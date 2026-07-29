@@ -58,6 +58,7 @@ class CAnalysisResult(BaseModel):
     alignment_identity: float
     allotypes: list[AllotypeMarkerCall] = Field(default_factory=list)
     isoallotypes: list[AllotypeMarkerCall] = Field(default_factory=list)
+    allotype_summary: str = "None"
 
 
 class FullChainAnalysis(BaseModel):

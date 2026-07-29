@@ -109,3 +109,16 @@ def test_cdomain_ige_allotypes():
     res_03 = analyze_cdomain(ige_03_seq, chain_hint=ChainType.HEAVY)
     allotype_names_03 = [a.allotype for a in res_03.allotypes if a.status == "present"]
     assert "IGHE*03" in allotype_names_03
+
+
+def test_cdomain_multiple_simultaneous_allotypes():
+    """Tests simultaneous calling of multiple allotypes (e.g., G1m17 and G1m1 -> G1m17,1)."""
+    # Trastuzumab heavy chain has G1m17 (K214) and nG1m1 (E356/M358)
+    # Restore natural G1m1 (D356/L358): REEMTKN -> RDELTKN
+    seq = TRASTUZUMAB_HEAVY_FULL.replace("REEMTKN", "RDELTKN")
+    res = analyze_cdomain(seq, v_domain_len=120, chain_hint=ChainType.HEAVY)
+
+    present_allotypes = [a.allotype for a in res.allotypes if a.status == "present"]
+    assert "G1m17" in present_allotypes
+    assert "G1m1" in present_allotypes
+    assert res.allotype_summary == "G1m17,1"
