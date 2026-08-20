@@ -25,12 +25,10 @@ def test_allotype_matching_uses_eu_position_not_legacy_offset():
     reference = c_gene_db["heavy"]["IGHG1"]["sequence"]
     markers = deepcopy(allotype_db["heavy"]["IgG1"])
 
-    # Corrupt the legacy subclass-relative offset for the EU 214 marker. The
-    # canonical EU coordinate must still resolve G1m17 correctly.
+    # EU position is canonical; legacy subclass offsets should not be required.
     for rule in markers:
         for marker in rule.get("markers", []):
-            if marker["eu_position"] == 214:
-                marker["subclass_offset"] = 1
+            marker.pop("subclass_offset", None)
 
     alignment = _make_aligner().align(reference, reference)[0]
     allotypes, isoallotypes = _call_allotypes(

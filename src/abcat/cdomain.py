@@ -15,6 +15,18 @@ DATA_DIR = Path(__file__).parent.parent.parent / "data"
 _C_GENE_DB: dict[str, Any] | None = None
 _ALLOTYPE_DB: dict[str, Any] | None = None
 
+# EU numbering origins for the constant-domain reference sequences used by the
+# allotype database. These are explicit so allotype detection never depends on
+# the legacy subclass-relative offsets stored in historical marker records.
+_EU_REFERENCE_STARTS: dict[tuple[str, str], int] = {
+    ("heavy", "IgG1"): 118,
+    ("heavy", "IgG2"): 118,
+    ("heavy", "IgG3"): 118,
+    ("heavy", "IgG4"): 118,
+    ("heavy", "IgE"): 99,
+    ("light", "IGKC"): 109,
+}
+
 
 def _load_databases() -> tuple[dict[str, Any], dict[str, Any]]:
     global _C_GENE_DB, _ALLOTYPE_DB
@@ -112,36 +124,9 @@ def _select_subclass(
     return best_gene, best_info, best_score, best_alignment
 
 
-def _infer_eu_start(reference_c_seq: str, markers: list[dict[str, Any]]) -> int | None:
-    """Infer the EU numbering origin for the reference constant sequence."""
-    del reference_c_seq  # Reserved for future explicit EU-numbered reference tables.
-    starts = {
-        int(m["subclass_offset"]) - int(m["eu_position"]) + 1
-        for rule in markers
-        for m in rule.get("markers", [])
-        if "subclass_offset" in m and "eu_position" in m
-    }
-    if len(starts) == 1:
-        return starts.pop()
-    if not starts:
-        logger.warning("No EU origin metadata available for allotype markers")
-    else:
-        logger.warning("Inconsistent EU origins in allotype markers: %s", sorted(starts))
-    return None
-
-
-def _get_query_index_for_eu_position(
-    alignment: Any,
-    eu_position: int,
-    reference_eu_start: int | None,
-) -> int | None:
-    """Map a canonical EU position through reference and query pairwise alignment."""
-    if reference_eu_start is None:
-        return None
-    ref_idx = eu_position - reference_eu_start
-    if ref_idx < 0:
-        return None
-    return _get_query_index_for_ref_offset(alignment, ref_idx, 0)
+def _get_eu_reference_start(chain_category: str, matched_subclass: str) -> int | None:
+    """Return the explicit EU-numbering origin for the selected reference."""
+    return _EU_REFERENCE_STARTS.get((chain_category, matched_subclass))
 
 
 def _get_query_index_for_ref_offset(
@@ -157,6 +142,20 @@ def _get_query_index_for_ref_offset(
     if 0 <= ref_idx < default_len:
         return ref_idx
     return None
+
+
+def _get_query_index_for_eu_position(
+    alignment: Any,
+    eu_position: int,
+    reference_eu_start: int | None,
+) -> int | None:
+    """Map a canonical EU position through reference and query pairwise alignment."""
+    if reference_eu_start is None:
+        return None
+    ref_idx = eu_position - reference_eu_start
+    if ref_idx < 0:
+        return None
+    return _get_query_index_for_ref_offset(alignment, ref_idx, 0)
 
 
 def analyze_cdomain(
@@ -178,7 +177,7 @@ def analyze_cdomain(
     else:
         search_groups = ["heavy", "light"]
 
-    # Stage 1: determine isotype without letting allotype/subclass differences influence the class call.
+    # Stage 1: determine isotype without letting subclass/allotype differences influence the class call.
     best_chain: str | None = None
     best_isotype = "Unknown"
     best_iso_score = float("-inf")
@@ -219,7 +218,7 @@ def analyze_cdomain(
     identity = round(min(1.0, max(0.0, best_score / (2.0 * ref_len))), 4)
     subclass = best_c_info["subclass"]
 
-    # Stage 3: determine allotypes from canonical EU-numbered positions.
+    # Stage 3: determine allotypes from canonical EU-numbered constant/Fc positions.
     allotype_calls, isoallotype_calls = _call_allotypes(
         query_c_seq=c_seq,
         matched_subclass=subclass,
@@ -288,8 +287,9 @@ def _call_allotypes(
     if not subclass_markers:
         return allotypes, isoallotypes
 
-    eu_start = _infer_eu_start(reference_c_seq, subclass_markers)
-    if eu_start is None:
+    reference_eu_start = _get_eu_reference_start(chain_category, matched_subclass)
+    if reference_eu_start is None:
+        logger.warning("No EU reference origin for %s/%s", chain_category, matched_subclass)
         return allotypes, isoallotypes
 
     for rule in subclass_markers:
@@ -306,7 +306,7 @@ def _call_allotypes(
         for marker in markers:
             eu_pos = int(marker["eu_position"])
             expected_aa = marker["amino_acid"]
-            query_idx = _get_query_index_for_eu_position(best_alignment := alignment, eu_pos, eu_start)
+            query_idx = _get_query_index_for_eu_position(alignment, eu_pos, reference_eu_start)
             if query_idx is None or not (0 <= query_idx < len(query_c_seq)):
                 all_matched = False
                 continue
