@@ -300,7 +300,7 @@
         "reference_subclass": "IGHE",
         "markers": [
           { "subclass_offset": 43, "eu_position": 141, "amino_acid": "W" },
-          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "W" }
+          { "subclass_offset": 149, "eu_position": 247, "amino_acid": "W" }
         ]
       },
       {
@@ -310,7 +310,7 @@
         "reference_subclass": "IGHE",
         "markers": [
           { "subclass_offset": 43, "eu_position": 141, "amino_acid": "C" },
-          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "L" }
+          { "subclass_offset": 149, "eu_position": 247, "amino_acid": "L" }
         ]
       },
       {
@@ -320,7 +320,7 @@
         "reference_subclass": "IGHE",
         "markers": [
           { "subclass_offset": 43, "eu_position": 141, "amino_acid": "W" },
-          { "subclass_offset": 149, "eu_position": 246, "amino_acid": "W" }
+          { "subclass_offset": 149, "eu_position": 247, "amino_acid": "W" }
         ]
       }
     ]

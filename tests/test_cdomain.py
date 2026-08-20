@@ -122,3 +122,35 @@ def test_cdomain_multiple_simultaneous_allotypes():
     assert "G1m17" in present_allotypes
     assert "G1m1" in present_allotypes
     assert res.allotype_summary == "G1m17,1"
+
+
+def test_example_fasta_igg1_human():
+    """Tests that IGG1_human sequence from examples fasta yields Isotype: IgG, Subclass: 1 (IgG1), and Allotype: G1m17,1."""
+    from pathlib import Path
+
+    from abcat import analyze_chain
+    from abcat.utils import read_fasta_file
+
+    fasta_path = Path(__file__).parent.parent / "examples" / "full_antibodies.fasta"
+    records = dict(read_fasta_file(fasta_path))
+
+    # Match IGG1_human sequence (case-insensitive header match)
+    matching_key = next((k for k in records if "igg1_human" in k.lower()), None)
+    assert matching_key is not None, (
+        "IGG1_human sequence not found in examples/full_antibodies.fasta"
+    )
+
+    seq = records[matching_key]
+    res = analyze_chain(seq, sequence_id=matching_key)
+
+    assert res.c_analysis is not None
+    assert res.c_analysis.isotype == "IgG"
+    assert res.c_analysis.subclass == "IgG1" or res.c_analysis.subclass == "1"
+    assert "1" in res.c_analysis.subclass
+    assert res.c_analysis.allotype_summary == "G1m17,1"
+
+    present_allotypes = [
+        a.allotype for a in res.c_analysis.allotypes if a.status == "present"
+    ]
+    assert "G1m17" in present_allotypes
+    assert "G1m1" in present_allotypes

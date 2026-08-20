@@ -165,7 +165,11 @@ def analyze_cdomain(
 ) -> CAnalysisResult:
     """Analyze the constant domain in order: isotype -> subclass -> EU allotype."""
     cleaned = clean_sequence(sequence)
-    c_seq = cleaned[v_domain_len:] if v_domain_len > 0 and len(cleaned) > v_domain_len else cleaned
+    c_seq = (
+        cleaned[v_domain_len:]
+        if v_domain_len > 0 and len(cleaned) > v_domain_len
+        else cleaned
+    )
 
     c_gene_db, allotype_db = _load_databases()
     aligner = _make_aligner()
@@ -289,7 +293,9 @@ def _call_allotypes(
 
     reference_eu_start = _get_eu_reference_start(chain_category, matched_subclass)
     if reference_eu_start is None:
-        logger.warning("No EU reference origin for %s/%s", chain_category, matched_subclass)
+        logger.warning(
+            "No EU reference origin for %s/%s", chain_category, matched_subclass
+        )
         return allotypes, isoallotypes
 
     for rule in subclass_markers:
@@ -306,7 +312,9 @@ def _call_allotypes(
         for marker in markers:
             eu_pos = int(marker["eu_position"])
             expected_aa = marker["amino_acid"]
-            query_idx = _get_query_index_for_eu_position(alignment, eu_pos, reference_eu_start)
+            query_idx = _get_query_index_for_eu_position(
+                alignment, eu_pos, reference_eu_start
+            )
             if query_idx is None or not (0 <= query_idx < len(query_c_seq)):
                 all_matched = False
                 continue
