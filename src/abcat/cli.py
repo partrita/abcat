@@ -187,6 +187,8 @@ def cdomain_command(
     console.print(f"[bold green]Isotype:[/bold green] {res.isotype}")
     console.print(f"[bold green]Subclass:[/bold green] {res.subclass}")
     console.print(f"[bold green]Matched Gene:[/bold green] {res.matched_c_gene}")
+    if res.imgt_allele:
+        console.print(f"[bold green]IMGT Allele:[/bold green] {res.imgt_allele}")
 
     if res.allotype_summary != "None":
         console.print(
@@ -208,6 +210,7 @@ def _render_rich_table(results):
     table.add_column("Scheme", style="yellow")
     table.add_column("Isotype", style="green")
     table.add_column("Subclass", style="bold green")
+    table.add_column("IMGT Allele", style="cyan")
     table.add_column("Allotypes", style="yellow")
     table.add_column("CDR1", style="blue")
     table.add_column("CDR2", style="blue")
@@ -218,29 +221,43 @@ def _render_rich_table(results):
         scheme_str = r.v_analysis.scheme.upper() if r.v_analysis else "IMGT"
         iso = r.c_analysis.isotype if r.c_analysis else "-"
         sub = r.c_analysis.subclass if r.c_analysis else "-"
+        allele = (
+            r.c_analysis.imgt_allele
+            if (r.c_analysis and r.c_analysis.imgt_allele)
+            else "-"
+        )
         allos = (
             r.c_analysis.allotype_summary
             if (r.c_analysis and r.c_analysis.allotype_summary)
             else "None"
         )
         cdr1 = (
-            r.v_analysis.cdrs.get("CDR1").sequence
+            r.v_analysis.cdrs["CDR1"].sequence
             if (r.v_analysis and "CDR1" in r.v_analysis.cdrs)
             else "-"
         )
         cdr2 = (
-            r.v_analysis.cdrs.get("CDR2").sequence
+            r.v_analysis.cdrs["CDR2"].sequence
             if (r.v_analysis and "CDR2" in r.v_analysis.cdrs)
             else "-"
         )
         cdr3 = (
-            r.v_analysis.cdrs.get("CDR3").sequence
+            r.v_analysis.cdrs["CDR3"].sequence
             if (r.v_analysis and "CDR3" in r.v_analysis.cdrs)
             else "-"
         )
 
         table.add_row(
-            r.sequence_id, chain, scheme_str, iso, sub, allos, cdr1, cdr2, cdr3
+            r.sequence_id,
+            chain,
+            scheme_str,
+            iso,
+            sub,
+            allele,
+            allos,
+            cdr1,
+            cdr2,
+            cdr3,
         )
 
     console.print(table)

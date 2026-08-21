@@ -84,7 +84,7 @@ def analyze_vdomain(sequence: str, scheme: str = "imgt") -> VAnalysisResult:
         scheme_lower = "imgt"
 
     try:
-        import anarcii  # type: ignore
+        import anarcii
 
         # Use ANARCII Class API if present
         if hasattr(anarcii, "Anarcii"):

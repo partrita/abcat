@@ -74,3 +74,4 @@ def test_cli_analyze_fasta(tmp_path):
     assert igg1_res["isotype"] == "IgG"
     assert igg1_res["subclass"] == "IgG1"
     assert igg1_res["allotype_summary"] == "G1m17,1"
+    assert "IGHG1*01" in igg1_res["imgt_allele"]

@@ -71,6 +71,7 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
         "Chain_Type",
         "Isotype",
         "Subclass",
+        "IMGT_Allele",
         "Allotypes",
         "Isoallotypes",
         "CDR1_Seq",
@@ -92,6 +93,11 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
         chain_type = item.v_analysis.chain_type.value if item.v_analysis else "Unknown"
         isotype = item.c_analysis.isotype if item.c_analysis else "Unknown"
         subclass = item.c_analysis.subclass if item.c_analysis else "Unknown"
+        imgt_allele_str = (
+            item.c_analysis.imgt_allele
+            if (item.c_analysis and item.c_analysis.imgt_allele)
+            else "None"
+        )
 
         present_isoallotypes = [
             a.allotype
@@ -109,17 +115,17 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
         )
 
         cdr1 = (
-            item.v_analysis.cdrs.get("CDR1").sequence
+            item.v_analysis.cdrs["CDR1"].sequence
             if (item.v_analysis and "CDR1" in item.v_analysis.cdrs)
             else ""
         )
         cdr2 = (
-            item.v_analysis.cdrs.get("CDR2").sequence
+            item.v_analysis.cdrs["CDR2"].sequence
             if (item.v_analysis and "CDR2" in item.v_analysis.cdrs)
             else ""
         )
         cdr3 = (
-            item.v_analysis.cdrs.get("CDR3").sequence
+            item.v_analysis.cdrs["CDR3"].sequence
             if (item.v_analysis and "CDR3" in item.v_analysis.cdrs)
             else ""
         )
@@ -131,6 +137,7 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
             chain_type,
             isotype,
             subclass,
+            imgt_allele_str,
             allotype_str,
             isoallotype_str,
             cdr1,

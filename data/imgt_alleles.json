@@ -1,0 +1,664 @@
+{
+  "heavy": {
+    "IgG1": [
+      {
+        "allele": "IGHG1*01",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "Y",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N"
+        },
+        "description": "G1m17,1 reference allele"
+      },
+      {
+        "allele": "IGHG1*02",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "Y",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N"
+        },
+        "description": "G1m17,1 silent nucleotide variant of *01"
+      },
+      {
+        "allele": "IGHG1*03",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "R",
+          "296": "Y",
+          "309": "L",
+          "356": "E",
+          "358": "M",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "199": "I",
+          "214": "R",
+          "309": "L",
+          "356": "E",
+          "358": "M",
+          "384": "N"
+        },
+        "description": "G1m3, nG1m1 allotype allele"
+      },
+      {
+        "allele": "IGHG1*04",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "Y",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "I",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "I"
+        },
+        "description": "G1m17,1,27 (422I) allotype allele"
+      },
+      {
+        "allele": "IGHG1*05",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "Y",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "R",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "435": "R",
+          "436": "Y"
+        },
+        "description": "G1m17,1,28 (435R, 436Y) allotype allele"
+      },
+      {
+        "allele": "IGHG1*07",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "Y",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "G",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "431": "G"
+        },
+        "description": "G1m17,1,2 (431G) allotype allele"
+      },
+      {
+        "allele": "IGHG1*08",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "R",
+          "296": "Y",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "199": "I",
+          "214": "R",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N"
+        },
+        "description": "G1m3,1 allotype allele"
+      },
+      {
+        "allele": "IGHG1*11",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "Y",
+          "309": "V",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "309": "V",
+          "356": "D",
+          "358": "L",
+          "384": "N"
+        },
+        "description": "G1m17,1 with 309V allele"
+      },
+      {
+        "allele": "IGHG1*13",
+        "subclass": "IgG1",
+        "reference_c_gene": "IGHG1",
+        "markers": {
+          "199": "I",
+          "214": "K",
+          "296": "F",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N",
+          "422": "V",
+          "431": "A",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "214": "K",
+          "296": "F",
+          "309": "L",
+          "356": "D",
+          "358": "L",
+          "384": "N"
+        },
+        "description": "G1m17,1 with 296F allele"
+      }
+    ],
+    "IgG2": [
+      {
+        "allele": "IGHG2*01",
+        "subclass": "IgG2",
+        "reference_c_gene": "IGHG2",
+        "markers": {
+          "192": "S",
+          "193": "L",
+          "282": "V",
+          "309": "V"
+        },
+        "key_markers": {
+          "282": "V",
+          "192": "S",
+          "193": "L"
+        },
+        "description": "G2m.. (G2m-) reference allele"
+      },
+      {
+        "allele": "IGHG2*02",
+        "subclass": "IgG2",
+        "reference_c_gene": "IGHG2",
+        "markers": {
+          "282": "M",
+          "309": "V"
+        },
+        "key_markers": {
+          "282": "M"
+        },
+        "description": "G2m23 (282M) allotype allele"
+      },
+      {
+        "allele": "IGHG2*04",
+        "subclass": "IgG2",
+        "reference_c_gene": "IGHG2",
+        "markers": {
+          "192": "N",
+          "193": "F",
+          "282": "V",
+          "309": "V"
+        },
+        "key_markers": {
+          "192": "N",
+          "193": "F",
+          "282": "V"
+        },
+        "description": "G2m(ny) (192N, 193F) allotype allele"
+      },
+      {
+        "allele": "IGHG2*06",
+        "subclass": "IgG2",
+        "reference_c_gene": "IGHG2",
+        "markers": {
+          "282": "V",
+          "309": "V"
+        },
+        "key_markers": {
+          "282": "V"
+        },
+        "description": "IGHG2*06 allele"
+      }
+    ],
+    "IgG3": [
+      {
+        "allele": "IGHG3*01",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "R",
+          "384": "S",
+          "435": "R",
+          "436": "F"
+        },
+        "key_markers": {
+          "291": "P",
+          "384": "S",
+          "435": "R",
+          "436": "F"
+        },
+        "description": "G3m5,26 reference allele"
+      },
+      {
+        "allele": "IGHG3*04",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "L",
+          "292": "R",
+          "384": "S",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "291": "L",
+          "384": "S",
+          "435": "H",
+          "436": "Y"
+        },
+        "description": "G3m21 (291L) allotype allele"
+      },
+      {
+        "allele": "IGHG3*11",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "R",
+          "384": "S",
+          "397": "V",
+          "419": "Q",
+          "435": "R",
+          "436": "F"
+        },
+        "key_markers": {
+          "397": "V",
+          "419": "Q",
+          "435": "R",
+          "436": "F"
+        },
+        "description": "G3m5,13,14 allotype allele"
+      },
+      {
+        "allele": "IGHG3*12",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "W",
+          "378": "M",
+          "384": "N",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "292": "W",
+          "378": "M",
+          "384": "N",
+          "435": "H",
+          "436": "Y"
+        },
+        "description": "G3m15,16 allotype allele"
+      },
+      {
+        "allele": "IGHG3*13",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "R",
+          "384": "S",
+          "419": "E",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "384": "S",
+          "419": "E",
+          "435": "H",
+          "436": "Y"
+        },
+        "description": "G3m6,24 allotype allele"
+      },
+      {
+        "allele": "IGHG3*14",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "R",
+          "384": "S",
+          "422": "I",
+          "435": "R",
+          "436": "Y"
+        },
+        "key_markers": {
+          "384": "S",
+          "422": "I",
+          "435": "R",
+          "436": "Y"
+        },
+        "description": "G3m10,27,28 allotype allele"
+      },
+      {
+        "allele": "IGHG3*17",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "R",
+          "384": "S",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "384": "S",
+          "435": "H",
+          "436": "Y"
+        },
+        "description": "G3m11 allotype allele"
+      },
+      {
+        "allele": "IGHG3*18",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "R",
+          "384": "N",
+          "435": "H",
+          "436": "Y"
+        },
+        "key_markers": {
+          "384": "N",
+          "435": "H",
+          "436": "Y"
+        },
+        "description": "nG3m11 allotype allele"
+      },
+      {
+        "allele": "IGHG3*19",
+        "subclass": "IgG3",
+        "reference_c_gene": "IGHG3",
+        "markers": {
+          "291": "P",
+          "292": "W",
+          "384": "S",
+          "435": "R",
+          "436": "F"
+        },
+        "key_markers": {
+          "292": "W",
+          "384": "S",
+          "435": "R",
+          "436": "F"
+        },
+        "description": "G3m16,5 allotype allele"
+      }
+    ],
+    "IgG4": [
+      {
+        "allele": "IGHG4*01",
+        "subclass": "IgG4",
+        "reference_c_gene": "IGHG4",
+        "markers": {
+          "309": "L",
+          "409": "R",
+          "445": "L"
+        },
+        "key_markers": {
+          "309": "L"
+        },
+        "description": "nG4m(a) (309L) reference allele"
+      },
+      {
+        "allele": "IGHG4*02",
+        "subclass": "IgG4",
+        "reference_c_gene": "IGHG4",
+        "markers": {
+          "309": "V",
+          "409": "R",
+          "445": "L"
+        },
+        "key_markers": {
+          "309": "V"
+        },
+        "description": "nG4m(b) (309V) allotype allele"
+      },
+      {
+        "allele": "IGHG4*03",
+        "subclass": "IgG4",
+        "reference_c_gene": "IGHG4",
+        "markers": {
+          "309": "L",
+          "409": "K",
+          "445": "L"
+        },
+        "key_markers": {
+          "309": "L",
+          "409": "K"
+        },
+        "description": "IGHG4*03 (409K) allele"
+      },
+      {
+        "allele": "IGHG4*04",
+        "subclass": "IgG4",
+        "reference_c_gene": "IGHG4",
+        "markers": {
+          "309": "L",
+          "409": "R",
+          "445": "P"
+        },
+        "key_markers": {
+          "309": "L",
+          "445": "P"
+        },
+        "description": "IGHG4*04 (445P) allele"
+      }
+    ],
+    "IgE": [
+      {
+        "allele": "IGHE*01",
+        "subclass": "IgE",
+        "reference_c_gene": "IGHE",
+        "markers": {
+          "141": "C",
+          "246": "W"
+        },
+        "key_markers": {
+          "141": "C",
+          "246": "W"
+        },
+        "description": "IGHE*01 reference allele"
+      },
+      {
+        "allele": "IGHE*02",
+        "subclass": "IgE",
+        "reference_c_gene": "IGHE",
+        "markers": {
+          "141": "W",
+          "247": "W"
+        },
+        "key_markers": {
+          "141": "W",
+          "247": "W"
+        },
+        "description": "IGHE*02 allele"
+      },
+      {
+        "allele": "IGHE*03",
+        "subclass": "IgE",
+        "reference_c_gene": "IGHE",
+        "markers": {
+          "141": "C",
+          "247": "L"
+        },
+        "key_markers": {
+          "141": "C",
+          "247": "L"
+        },
+        "description": "IGHE*03 allele"
+      },
+      {
+        "allele": "IGHE*04",
+        "subclass": "IgE",
+        "reference_c_gene": "IGHE",
+        "markers": {
+          "141": "W",
+          "247": "W"
+        },
+        "key_markers": {
+          "141": "W",
+          "247": "W"
+        },
+        "description": "IGHE*04 allele"
+      }
+    ]
+  },
+  "light": {
+    "IGKC": [
+      {
+        "allele": "IGKC*01",
+        "subclass": "IGKC",
+        "reference_c_gene": "IGKC",
+        "markers": {
+          "153": "A",
+          "191": "V"
+        },
+        "key_markers": {
+          "153": "A",
+          "191": "V"
+        },
+        "description": "Km3 allotype allele"
+      },
+      {
+        "allele": "IGKC*02",
+        "subclass": "IGKC",
+        "reference_c_gene": "IGKC",
+        "markers": {
+          "153": "A",
+          "191": "L"
+        },
+        "key_markers": {
+          "153": "A",
+          "191": "L"
+        },
+        "description": "Km1,2 allotype allele"
+      },
+      {
+        "allele": "IGKC*03",
+        "subclass": "IGKC",
+        "reference_c_gene": "IGKC",
+        "markers": {
+          "153": "V",
+          "191": "L"
+        },
+        "key_markers": {
+          "153": "V",
+          "191": "L"
+        },
+        "description": "Km1 allotype allele"
+      },
+      {
+        "allele": "IGKC*04",
+        "subclass": "IGKC",
+        "reference_c_gene": "IGKC",
+        "markers": {
+          "153": "A",
+          "191": "V"
+        },
+        "key_markers": {
+          "153": "A",
+          "191": "V"
+        },
+        "description": "Km3 silent variant allele"
+      }
+    ]
+  }
+}

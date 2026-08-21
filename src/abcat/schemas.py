@@ -59,6 +59,8 @@ class CAnalysisResult(BaseModel):
     allotypes: list[AllotypeMarkerCall] = Field(default_factory=list)
     isoallotypes: list[AllotypeMarkerCall] = Field(default_factory=list)
     allotype_summary: str = "None"
+    imgt_allele: str | None = None
+    imgt_alleles: list[str] = Field(default_factory=list)
 
 
 class FullChainAnalysis(BaseModel):

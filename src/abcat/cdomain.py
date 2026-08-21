@@ -14,6 +14,7 @@ DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
 _C_GENE_DB: dict[str, Any] | None = None
 _ALLOTYPE_DB: dict[str, Any] | None = None
+_IMGT_ALLELE_DB: dict[str, Any] | None = None
 
 # EU numbering origins for the constant-domain reference sequences used by the
 # allotype database. These are explicit so allotype detection never depends on
@@ -28,11 +29,12 @@ _EU_REFERENCE_STARTS: dict[tuple[str, str], int] = {
 }
 
 
-def _load_databases() -> tuple[dict[str, Any], dict[str, Any]]:
-    global _C_GENE_DB, _ALLOTYPE_DB
-    if _C_GENE_DB is None or _ALLOTYPE_DB is None:
+def _load_databases() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    global _C_GENE_DB, _ALLOTYPE_DB, _IMGT_ALLELE_DB
+    if _C_GENE_DB is None or _ALLOTYPE_DB is None or _IMGT_ALLELE_DB is None:
         c_gene_path = DATA_DIR / "human_c_genes.json"
         allotype_path = DATA_DIR / "allotype_markers.json"
+        imgt_allele_path = DATA_DIR / "imgt_alleles.json"
 
         if c_gene_path.exists():
             with open(c_gene_path, "r", encoding="utf-8") as f:
@@ -46,7 +48,13 @@ def _load_databases() -> tuple[dict[str, Any], dict[str, Any]]:
         else:
             _ALLOTYPE_DB = {"heavy": {}, "light": {}}
 
-    return _C_GENE_DB, _ALLOTYPE_DB
+        if imgt_allele_path.exists():
+            with open(imgt_allele_path, "r", encoding="utf-8") as f:
+                _IMGT_ALLELE_DB = json.load(f)
+        else:
+            _IMGT_ALLELE_DB = {"heavy": {}, "light": {}}
+
+    return _C_GENE_DB, _ALLOTYPE_DB, _IMGT_ALLELE_DB
 
 
 def _make_aligner() -> PairwiseAligner:
@@ -171,7 +179,7 @@ def analyze_cdomain(
         else cleaned
     )
 
-    c_gene_db, allotype_db = _load_databases()
+    c_gene_db, allotype_db, imgt_allele_db = _load_databases()
     aligner = _make_aligner()
 
     if chain_hint == ChainType.HEAVY:
@@ -201,6 +209,8 @@ def analyze_cdomain(
             alignment_identity=0.0,
             allotypes=[],
             isoallotypes=[],
+            imgt_allele=None,
+            imgt_alleles=[],
         )
 
     # Stage 2: subclass is matched only inside the selected isotype.
@@ -216,6 +226,8 @@ def analyze_cdomain(
             alignment_identity=0.0,
             allotypes=[],
             isoallotypes=[],
+            imgt_allele=None,
+            imgt_alleles=[],
         )
 
     ref_len = len(best_c_info["sequence"])
@@ -235,6 +247,16 @@ def analyze_cdomain(
     present_allotypes = [a.allotype for a in allotype_calls if a.status == "present"]
     summary_str = format_allotype_summary(present_allotypes)
 
+    # Stage 4: determine IMGT alleles from EU-numbered key markers and variations.
+    imgt_allele_str, imgt_alleles_list = _call_imgt_alleles(
+        query_c_seq=c_seq,
+        matched_subclass=subclass,
+        chain_category=best_chain,
+        imgt_alleles_db=imgt_allele_db,
+        c_gene_db=c_gene_db,
+        aligner=aligner,
+    )
+
     return CAnalysisResult(
         c_region_sequence=c_seq,
         isotype=best_isotype,
@@ -244,6 +266,8 @@ def analyze_cdomain(
         allotypes=allotype_calls,
         isoallotypes=isoallotype_calls,
         allotype_summary=summary_str,
+        imgt_allele=imgt_allele_str,
+        imgt_alleles=imgt_alleles_list,
     )
 
 
@@ -347,3 +371,90 @@ def _call_allotypes(
             allotypes.append(call)
 
     return allotypes, isoallotypes
+
+
+def _call_imgt_alleles(
+    query_c_seq: str,
+    matched_subclass: str,
+    chain_category: str,
+    imgt_alleles_db: dict[str, Any],
+    c_gene_db: dict[str, Any],
+    aligner: PairwiseAligner,
+) -> tuple[str | None, list[str]]:
+    """Determine IMGT allele(s) based on observed amino acids at EU-numbered positions."""
+    allele_candidates = imgt_alleles_db.get(chain_category, {}).get(
+        matched_subclass, []
+    )
+    if not allele_candidates:
+        return None, []
+
+    if chain_category == "heavy" and matched_subclass != "IgE":
+        can_seq = c_gene_db.get("heavy", {}).get("IGHG1", {}).get("sequence")
+        can_start = 118
+    elif matched_subclass == "IgE":
+        can_seq = c_gene_db.get("heavy", {}).get("IGHE", {}).get("sequence")
+        can_start = 99
+    elif matched_subclass == "IGKC":
+        can_seq = c_gene_db.get("light", {}).get("IGKC", {}).get("sequence")
+        can_start = 109
+    else:
+        can_seq = None
+        can_start = None
+
+    if not can_seq or can_start is None:
+        return None, []
+
+    alignments = aligner.align(query_c_seq, can_seq)
+    if not alignments:
+        return None, []
+    al = alignments[0]
+
+    exact_matches: list[tuple[str, int]] = []
+
+    for entry in allele_candidates:
+        allele_name = entry["allele"]
+        key_markers = entry.get("key_markers", {})
+        all_markers = entry.get("markers", {})
+
+        # Check key markers first
+        key_all_matched = True
+        key_observed_count = 0
+        for eu_pos_str, expected_aa in key_markers.items():
+            eu_pos = int(eu_pos_str)
+            ref_idx = eu_pos - can_start
+            query_idx = _get_query_index_for_ref_offset(al, ref_idx, len(query_c_seq))
+            if query_idx is None or not (0 <= query_idx < len(query_c_seq)):
+                key_all_matched = False
+                break
+            actual_aa = query_c_seq[query_idx]
+            if actual_aa != expected_aa:
+                key_all_matched = False
+                break
+            key_observed_count += 1
+
+        if not key_all_matched or key_observed_count < len(key_markers):
+            continue
+
+        # Check all markers to ensure no conflicts with any defining positions
+        conflicts = False
+        full_match_count = 0
+        for eu_pos_str, expected_aa in all_markers.items():
+            eu_pos = int(eu_pos_str)
+            ref_idx = eu_pos - can_start
+            query_idx = _get_query_index_for_ref_offset(al, ref_idx, len(query_c_seq))
+            if query_idx is not None and 0 <= query_idx < len(query_c_seq):
+                actual_aa = query_c_seq[query_idx]
+                if actual_aa != expected_aa:
+                    conflicts = True
+                    break
+                full_match_count += 1
+
+        if not conflicts:
+            exact_matches.append((allele_name, len(key_markers) + full_match_count))
+
+    if exact_matches:
+        max_score = max(score for _, score in exact_matches)
+        top_alleles = [name for name, score in exact_matches if score == max_score]
+        return ", ".join(top_alleles), top_alleles
+
+    return None, []

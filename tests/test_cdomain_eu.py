@@ -10,7 +10,7 @@ from abcat.schemas import ChainType
 
 
 def test_isotype_is_selected_before_subclass():
-    c_gene_db, _ = _load_databases()
+    c_gene_db, _, _ = _load_databases()
     igg1 = c_gene_db["heavy"]["IGHG1"]["sequence"]
 
     result = analyze_cdomain(igg1, chain_hint=ChainType.HEAVY)
@@ -21,7 +21,7 @@ def test_isotype_is_selected_before_subclass():
 
 
 def test_allotype_matching_uses_eu_position_not_legacy_offset():
-    c_gene_db, allotype_db = _load_databases()
+    c_gene_db, allotype_db, _ = _load_databases()
     reference = c_gene_db["heavy"]["IGHG1"]["sequence"]
     markers = deepcopy(allotype_db["heavy"]["IgG1"])
 

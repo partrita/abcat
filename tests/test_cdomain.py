@@ -94,7 +94,7 @@ def test_cdomain_ige_allotypes():
     """Tests IgE constant region allotype calling for IGHE alleles."""
     from abcat.cdomain import _load_databases
 
-    c_gene_db, _ = _load_databases()
+    c_gene_db, _, _ = _load_databases()
     ige_seq = c_gene_db["heavy"]["IGHE"]["sequence"]
 
     res = analyze_cdomain(ige_seq, chain_hint=ChainType.HEAVY)
@@ -154,3 +154,99 @@ def test_example_fasta_igg1_human():
     ]
     assert "G1m17" in present_allotypes
     assert "G1m1" in present_allotypes
+
+
+def test_cdomain_imgt_alleles_ighg1():
+    """Tests IMGT allele calling for IGHG1 variants (*01, *03, *04, *07, *08, *11, *13)."""
+    # IGHG1*01: 214K, 309L, 356D, 358L, 384N
+    res_01 = analyze_cdomain(
+        WILDTYPE_G1M1_17_HEAVY, v_domain_len=119, chain_hint=ChainType.HEAVY
+    )
+    assert res_01.imgt_allele is not None
+    assert "IGHG1*01" in res_01.imgt_alleles
+
+    # IGHG1*03: 199I, 214R, 309L, 356E, 358M, 384N
+    # In WILDTYPE_G1M1_17_HEAVY: NTKVDKKVEPK -> NIKVDKRVEPK (199I, 214R), RDELTKN -> REEMTKN (356E, 358M)
+    seq_03 = WILDTYPE_G1M1_17_HEAVY.replace("NTKVDKKVEPK", "NIKVDKRVEPK").replace(
+        "RDELTKN", "REEMTKN"
+    )
+    res_03 = analyze_cdomain(seq_03, v_domain_len=119, chain_hint=ChainType.HEAVY)
+    assert res_03.imgt_allele == "IGHG1*03"
+    assert "IGHG1*03" in res_03.imgt_alleles
+
+    # IGHG1*04: 214K, 309L, 356D, 358L, 384N, 422I
+    # In WILDTYPE_G1M1_17_HEAVY: GNVFSCS -> GNIFSCS (422I)
+    seq_04 = WILDTYPE_G1M1_17_HEAVY.replace("GNVFSCS", "GNIFSCS")
+    res_04 = analyze_cdomain(seq_04, v_domain_len=119, chain_hint=ChainType.HEAVY)
+    assert res_04.imgt_allele == "IGHG1*04"
+
+    # IGHG1*07: 214K, 309L, 356D, 358L, 384N, 431G
+    # In WILDTYPE_G1M1_17_HEAVY: HEALHNH -> HEGLHNH (431G)
+    seq_07 = WILDTYPE_G1M1_17_HEAVY.replace("HEALHNH", "HEGLHNH")
+    res_07 = analyze_cdomain(seq_07, v_domain_len=119, chain_hint=ChainType.HEAVY)
+    assert res_07.imgt_allele == "IGHG1*07"
+
+    # IGHG1*08: 199I, 214R, 309L, 356D, 358L, 384N
+    # In WILDTYPE_G1M1_17_HEAVY: NTKVDKKVEPK -> NIKVDKRVEPK (199I, 214R), keeps 356D, 358L
+    seq_08 = WILDTYPE_G1M1_17_HEAVY.replace("NTKVDKKVEPK", "NIKVDKRVEPK")
+    res_08 = analyze_cdomain(seq_08, v_domain_len=119, chain_hint=ChainType.HEAVY)
+    assert res_08.imgt_allele == "IGHG1*08"
+
+    # IGHG1*11: 214K, 309V, 356D, 358L, 384N
+    # In WILDTYPE_G1M1_17_HEAVY: LTVLHQ -> LTVVHQ (309V)
+    seq_11 = WILDTYPE_G1M1_17_HEAVY.replace("LTVLHQ", "LTVVHQ")
+    res_11 = analyze_cdomain(seq_11, v_domain_len=119, chain_hint=ChainType.HEAVY)
+    assert res_11.imgt_allele == "IGHG1*11"
+
+    # IGHG1*13: 214K, 296F, 309L, 356D, 358L, 384N
+    # In WILDTYPE_G1M1_17_HEAVY: EQYNSTY -> EQFNSTY (296F)
+    seq_13 = WILDTYPE_G1M1_17_HEAVY.replace("EQYNSTY", "EQFNSTY")
+    res_13 = analyze_cdomain(seq_13, v_domain_len=119, chain_hint=ChainType.HEAVY)
+    assert res_13.imgt_allele == "IGHG1*13"
+
+
+def test_cdomain_imgt_alleles_ighg2_ighg3_ighg4_igkc():
+    """Tests IMGT allele calling for IGHG2, IGHG3, IGHG4, and IGKC."""
+    from abcat.cdomain import _load_databases
+
+    c_gene_db, _, _ = _load_databases()
+
+    # IGHG2
+    g2_seq = c_gene_db["heavy"]["IGHG2"]["sequence"]
+    res_g2_04 = analyze_cdomain(g2_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG2*04" in res_g2_04.imgt_alleles
+
+    # IGHG2*01: replace 192N/193F (SSNFGT) with 192S/193L (SSSLGT)
+    g2_01_seq = g2_seq.replace("SSNFGT", "SSSLGT")
+    res_g2_01 = analyze_cdomain(g2_01_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG2*01" in res_g2_01.imgt_alleles
+
+    # IGHG2*02 (282M): replace DGVEVH with DGMEVH
+    g2_02_seq = g2_seq.replace("DGVEVH", "DGMEVH")
+    res_g2_02 = analyze_cdomain(g2_02_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG2*02" in res_g2_02.imgt_alleles
+
+    # IGHG3
+    g3_seq = c_gene_db["heavy"]["IGHG3"]["sequence"]
+    res_g3 = analyze_cdomain(g3_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG3*01" in res_g3.imgt_alleles
+
+    # IGHG3*04 (291L, 435H, 436Y): replace TKPREEQYN with TKLREEQYN, and HNRFT with HNHYT
+    g3_04_seq = g3_seq.replace("TKPREEQYN", "TKLREEQYN").replace("HNRFT", "HNHYT")
+    res_g3_04 = analyze_cdomain(g3_04_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG3*04" in res_g3_04.imgt_alleles
+
+    # IGHG4
+    g4_seq = c_gene_db["heavy"]["IGHG4"]["sequence"]
+    res_g4_01 = analyze_cdomain(g4_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG4*01" in res_g4_01.imgt_alleles
+
+    # IGHG4*02 (309V): replace LTVLHQ with LTVVHQ
+    g4_02_seq = g4_seq.replace("LTVLHQ", "LTVVHQ")
+    res_g4_02 = analyze_cdomain(g4_02_seq, chain_hint=ChainType.HEAVY)
+    assert "IGHG4*02" in res_g4_02.imgt_alleles
+
+    # IGKC (Km3: 153A, 191V -> IGKC*01)
+    kc_seq = c_gene_db["light"]["IGKC"]["sequence"]
+    res_kc_01 = analyze_cdomain(kc_seq, chain_hint=ChainType.KAPPA)
+    assert "IGKC*01" in res_kc_01.imgt_alleles
