@@ -2,30 +2,30 @@
 
 [English](./README.en.md) | [한국어](./README.md)
 
-`abcat`는 [ANARCII](https://github.com/oxpig/ANARCII)를 기반으로 항체 Heavy chain과 Light chain의 Variable Domain(VH, VL) 및 Constant Domain(CH1, CH2, CH3, CL)을 함께 분석하는 Python CLI/라이브러리입니다.
+`abcat` is a Python CLI and library designed for unified sequence analysis of antibody Heavy and Light chains across both Variable Domains (VH, VL) and Constant Domains (CH1, CH2, CH3, CL), leveraging [ANARCII](https://github.com/oxpig/ANARCII) as a core dependency.
 
-Variable Domain은 ANARCII로 넘버링(IMGT, Kabat, Chothia 등)과 CDR1/2/3 루프 구간을 추출하고, Constant Domain은 서열 비교를 거쳐 Isotype, Subclass, Isoallotype, Allotype을 판정합니다.
+For Variable Domains, `abcat` uses ANARCII to perform numbering (IMGT, Kabat, Chothia, Martin, AHo) and to delineate CDR1, CDR2, and CDR3 loops. For Constant Domains, it performs sequence alignments and fingerprint matching to determine Isotype, Subclass, IMGT Allele, Isoallotype, and Allotype.
 
 ## Key Features
 
-1. Variable Domain (VH / VL) 분석 (ANARCII 기반):
-   - Variable Domain 경계 인식 및 IMGT/Kabat/Chothia/AHo 번호 부여
-   - CDR1, CDR2, CDR3 및 Framework(FR1, FR2, FR3, FR4) 구간 서열·길이 추출
-   - Heavy chain(VH), Light chain(VK, VL) 자동 분류 및 confidence score 산출
+1. **Variable Domain (VH / VL) Analysis (Powered by ANARCII):**
+   - Precise Variable Domain boundary detection and IMGT/Kabat/Chothia/Martin/AHo numbering.
+   - Automatic extraction of CDR1, CDR2, CDR3 and Framework (FR1, FR2, FR3, FR4) sequences and lengths.
+   - Heavy chain (VH) and Light chain (VK, VL) classification with confidence scores.
 
-2. Constant Domain 분석 (Isotype, Subclass, IMGT Allele, Isoallotype, Allotype):
-   - Constant Region (CH1, Hinge, CH2, CH3 / CL) 자동 도출
-   - Isotype 판정: Heavy chain (`IgG`, `IgA`, `IgM`, `IgE`, `IgD`), Light chain (`Kappa`, `Lambda`)
-   - Subclass 판정: `IgG1`, `IgG2`, `IgG3`, `IgG4`, `IgA1`, `IgA2`, `IGKC`, `IGLC1`~`IGLC7`
-   - IMGT Allele 판정: EU 넘버링 핵심 다형성 위치 조합을 통한 IMGT 대립유전자(Allele) 자동 분류
-     - `IGHG1*01`~`IGHG1*13`, `IGHG2*01`~`IGHG2*06`, `IGHG3*01`~`IGHG3*19`, `IGHG4*01`~`IGHG4*04`, `IGKC*01`~`IGKC*04`, `IGHE*01`~`IGHE*04`
-   - Allotype 및 Isoallotype 판정: IMGT 다형성 위치(Polymorphic positions) 기반 알로타입 마커 추출
-     - Heavy chain: `G1m1`, `G1m2`, `G1m3`, `G1m17`, `G1m27`, `G1m28`, `G2m..`, `G2m23`, `G3m5`~`G3m28`, `nG1m1`, `nG1m17`, `nG3m5`, `nG3m11`, `nG3m21`, `nG4m(a)`, `nG4m(b)`, `IGHE*01`~`IGHE*04` 등
-     - Light chain: `Km1`, `Km1,2`, `Km3` 등
+2. **Constant Domain Analysis (Isotype, Subclass, IMGT Allele, Isoallotype, Allotype):**
+   - Automatic identification of Constant Regions (CH1, Hinge, CH2, CH3 / CL).
+   - Isotype determination: Heavy chain (`IgG`, `IgA`, `IgM`, `IgE`, `IgD`), Light chain (`Kappa`, `Lambda`).
+   - Subclass classification: `IgG1`, `IgG2`, `IgG3`, `IgG4`, `IgA1`, `IgA2`, `IGKC`, `IGLC1`–`IGLC7`.
+   - IMGT Allele classification based on EU numbering key polymorphic positions:
+     - `IGHG1*01`–`IGHG1*13`, `IGHG2*01`–`IGHG2*06`, `IGHG3*01`–`IGHG3*19`, `IGHG4*01`–`IGHG4*04`, `IGKC*01`–`IGKC*04`, `IGHE*01`–`IGHE*04`.
+   - Allotype and Isoallotype determination via IMGT polymorphic residue fingerprints:
+     - Heavy chain: `G1m1`, `G1m2`, `G1m3`, `G1m17`, `G1m27`, `G1m28`, `G2m..`, `G2m23`, `G3m5`–`G3m28`, `nG1m1`, `nG1m17`, `nG3m5`, `nG3m11`, `nG3m21`, `nG4m(a)`, `nG4m(b)`, `IGHE*01`–`IGHE*04`, etc.
+     - Light chain: `Km1`, `Km1,2`, `Km3`, etc.
 
-3. CLI 및 Python API 지원:
-   - 단일 서열 및 FASTA 배치 파일 분석
-   - CSV, JSON, 콘솔 테이블 출력
+3. **CLI and Python API Support:**
+   - Single sequence analysis and FASTA batch file processing.
+   - Comprehensive reporting in CSV, JSON, and rich console table formats.
 
 ## Tech Stack
 
@@ -68,7 +68,7 @@ Variable Domain은 ANARCII로 넘버링(IMGT, Kabat, Chothia 등)과 CDR1/2/3 �
 
 ## IMGT Constant Domain Alleles (Reference)
 
-`abcat`는 EU numbering 기준의 핵심 아미노산 잔기 조합(Fingerprint)으로 IMGT 대립유전자(Alleles)를 판정합니다.
+`abcat` identifies IMGT alleles through key amino acid residue combinations (fingerprints) based on EU numbering:
 
 ### 1. IGHG1 (IgG1) Alleles
 
@@ -122,31 +122,31 @@ Variable Domain은 ANARCII로 넘버링(IMGT, Kabat, Chothia 등)과 CDR1/2/3 �
 | IgG3 (CH3)       | `G3m5` vs `nG3m5`         | CH3 EU 435, 436                 | R435/F436 = G3m5, H435/Y436 = nG3m5                 |
 | IgG3 (CH3)       | `G3m26`                   | CH3 EU 436                      | R436 = G3m26                                        |
 | IgG4 (CH2)       | `nG4m(a)` vs `nG4m(b)`    | CH2 EU 309                      | L309 = nG4m(a), V309 = nG4m(b)                      |
-| IgE (CH1, CH2)   | `IGHE*01`~`IGHE*04`       | CH1 IMGT 41, CH2 IMGT 41        | C141/W246 (*01), W141/W246 (*02), C141/L246 (*03)   |
+| IgE (CH1, CH2)   | `IGHE*01`–`IGHE*04`       | CH1 IMGT 41, CH2 IMGT 41        | C141/W246 (*01), W141/W246 (*02), C141/L246 (*03)   |
 | Kappa (CL)       | `Km1` vs `Km1,2` vs `Km3` | CL IMGT 45, 83 (EU 153, 191)    | V153/L191 = Km1, A153/L191 = Km1,2, A153/V191 = Km3 |
 
-> **엔지니어링 항체 참고 (예: Trastuzumab):**  
-> Trastuzumab의 Heavy Chain Fc는 자연형 G1m1,17과 달리 CH3 영역이 `E356-M358`로 변형되어 G1m1 에피토프가 제거된 엔지니어링 서열입니다. 따라서 `G1m17` 알로타입만 감지되며(`G1m17 only`), CH3의 `E356/M358` 구간은 `nG1m1` isoallotype으로 분류됩니다.
+> **Note on Engineered Antibodies (e.g., Trastuzumab):**  
+> Trastuzumab's Heavy Chain Fc differs from the natural G1m1,17 form by harboring an engineered `E356-M358` motif in the CH3 region to remove the G1m1 epitope. Consequently, the analyzer identifies only the `G1m17` allotype (`G1m17 only`), and classifies the `E356/M358` segment as the `nG1m1` isoallotype.
 
 ## Installation
 
-### 1. PyPI 설치
+### 1. From PyPI
 
 ```bash
 uv pip install abcat
 ```
 
-### 2. 개발 환경 설정 (`uv` 기준)
+### 2. Development Setup (using `uv`)
 
 ```bash
-# 저장소 클론
+# Clone repository
 git clone https://github.com/user/abcat.git
 cd abcat
 
-# 개발 의존성 포함 동기화
+# Sync virtual environment including development dependencies
 uv sync --extra dev
 
-# 테스트 및 CLI 실행
+# Run tests and CLI
 uv run pytest
 uv run abcat analyze --sequence EVQLVES...
 ```
@@ -156,10 +156,10 @@ uv run abcat analyze --sequence EVQLVES...
 ### 1. CLI Examples
 
 ```bash
-# 기본 분석 (IMGT scheme)
+# Basic analysis (IMGT scheme)
 abcat analyze --sequence EVQLVESGGGLVQPGGSLRLSCAASGFTFSDHYMDWVRQAPGKGLEWVGRIRSKANSYATAYAASVKGRFTISRDDSKNTLYLQMNSLRAEDTAVYYCARFDAYWGQGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSCDKTHTCPPCPAPELLGGPSVFLFPPKPKDTLMISRTPEVTCVVVDVSHEDPEVKFNWYVDGVEVHNAKTKPREEQYNSTYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSRDELTKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQQGNVFSCSVMHEALHNHYTQKSLSLSPGK
 
-# 줄바꿈이 포함된 서열 분석 (큰따옴표 "..." 사용)
+# Sequence containing line breaks (wrap with quotes)
 abcat analyze --sequence "EVQLLESGGGLVQPGGSLRLSCAASGIDLSTYAMGWVRQAPGKGLEWVGLIHRSGRTYYA
 TWAKGRFTISKDSSKNTLYLQMNSLRAEDTAVYYCTRSYPDYSATASIWGQGTTVTVSSA
 STKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSG
@@ -169,13 +169,13 @@ TYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSREEM
 TKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQ
 QGNVFSCSVMHEALHNHYTQKSLSLSPGK"
 
-# 넘버링 체계(Scheme) 지정 (imgt, kabat, martin, chothia, aho 지원)
+# Specify numbering scheme (supports imgt, kabat, martin, chothia, aho)
 abcat analyze --sequence EVQLVES... --scheme kabat
 abcat vdomain --sequence EVQLVES... --scheme martin
 abcat vdomain --sequence EVQLVES... --scheme chothia
 abcat vdomain --sequence EVQLVES... --scheme aho
 
-# FASTA 배치 파일 분석 및 CSV 저장
+# Batch analysis from FASTA file to CSV
 abcat batch --input examples/full_antibodies.fasta --output results.csv --format csv --scheme imgt
 ```
 
@@ -186,21 +186,21 @@ from abcat import analyze_chain, analyze_vdomain
 
 seq = "EVQLVESGGGLVQPGGSLRLSCAASGFTFSDHYMDWVRQAPGKGLEWVGRIRSKANSYATAYAASVKGRFTISRDDSKNTLYLQMNSLRAEDTAVYYCARFDAYWGQGTLVTVSSASTKGPSVFPLAPSSKSTSGGTAALGCLVKDYFPEPVTVSWNSGALTSGVHTFPAVLQSSGLYSLSSVVTVPSSSLGTQTYICNVNHKPSNTKVDKKVEPKSCDKTHTCPPCPAPELLGGPSVFLFPPKPKDTLMISRTPEVTCVVVDVSHEDPEVKFNWYVDGVEVHNAKTKPREEQYNSTYRVVSVLTVLHQDWLNGKEYKCKVSNKALPAPIEKTISKAKGQPREPQVYTLPPSRDELTKNQVSLTCLVKGFYPSDIAVEWESNGQPENNYKTTPPVLDSDGSFFLYSKLTVDKSRWQQGNVFSCSVMHEALHNHYTQKSLSLSPGK"
 
-# Martin scheme으로 분석
+# Analyze with Martin scheme
 result_martin = analyze_chain(seq, scheme="martin")
 print("Scheme:", result_martin.v_analysis.scheme)
 print("CDR1:", result_martin.v_analysis.cdrs["CDR1"].sequence)
 print("CDR2:", result_martin.v_analysis.cdrs["CDR2"].sequence)
 print("CDR3:", result_martin.v_analysis.cdrs["CDR3"].sequence)
 
-# Kabat scheme으로 V-Domain만 분석
+# Analyze only V-Domain with Kabat scheme
 v_kabat = analyze_vdomain(seq, scheme="kabat")
 print("Kabat CDR3:", v_kabat.cdrs["CDR3"].sequence)
 ```
 
 ## PyPI Deployment (GitHub Actions)
 
-GitHub Release 생성 시 `uv build`를 거쳐 PyPI Trusted Publisher (OIDC)로 패키지를 자동 배포합니다.
+When a GitHub Release is created, the workflow builds wheels and source distributions using `uv build` and automatically publishes them to PyPI via PyPI Trusted Publisher (OIDC).
 
 ## License
 
