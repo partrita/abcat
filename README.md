@@ -11,15 +11,17 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
    - CDR1, CDR2, CDR3 및 Framework (FR1, FR2, FR3, FR4) 구간 서열 및 길이 자동 추출.
    - Heavy chain(VH), Light chain(VK, VL) 자동 구분 및 confidence score 제공.
 
-2. Constant Domain 분석 (Isotype, Subclass, Isoallotype, Allotype):
+2. Constant Domain 분석 (Isotype, Subclass, IMGT Allele, Isoallotype, Allotype):
    - Constant Region (CH1, Hinge, CH2, CH3 / CL) 자동 도출.
    - Isotype 판정: Heavy chain (`IgG`, `IgA`, `IgM`, `IgE`, `IgD`), Light chain (`Kappa`, `Lambda`).
    - Subclass 판정: `IgG1`, `IgG2`, `IgG3`, `IgG4`, `IgA1`, `IgA2`, `IGKC`, `IGLC1`~`IGLC7`.
+   - IMGT Allele 판정: EU 넘버링 핵심 다형성 위치 조합을 통한 IMGT 대립유전자(Allele) 자동 분류.
+     - `IGHG1*01`~`IGHG1*13`, `IGHG2*01`~`IGHG2*06`, `IGHG3*01`~`IGHG3*19`, `IGHG4*01`~`IGHG4*04`, `IGKC*01`~`IGKC*04`, `IGHE*01`~`IGHE*04`.
    - Allotype 및 Isoallotype 판정: IMGT 다형성 위치(Polymorphic positions) 분석을 통한 알로타입 마커 추출.
      - Heavy chain: `G1m1`, `G1m2`, `G1m3`, `G1m17`, `G1m27`, `G1m28`, `G2m..`, `G2m23`, `G3m5`~`G3m28`, `nG1m1`, `nG1m17`, `nG3m5`, `nG3m11`, `nG3m21`, `nG4m(a)`, `nG4m(b)`, `IGHE*01`~`IGHE*04` 등.
      - Light chain: `Km1`, `Km1,2`, `Km3` 등.
 
-2. CLI 및 Python API 지원:
+3. CLI 및 Python API 지원:
    - 단일 서열 및 FASTA 배치 파일 분석 지원.
    - CSV, JSON, 콘솔 테이블 형태의 풍부한 리포팅.
 
@@ -31,7 +33,7 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
 - C-Domain Alignment & Sequence Comparison: `biopython`
 - Data Models: `pydantic`
 - CLI Framework: `typer` / `rich`
-- Testing & Quality: `pytest`, `ruff`, `mypy`
+- Testing & Quality: `pytest`, `ruff`, `mypy`, `ty`
 
 ## Architecture & Workflow
 
@@ -51,7 +53,8 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
 │ - VH / VL Check  │    │ - Constant Region Extraction      │
 │ - IMGT Numbering │    │ - C-Gene Profile Alignment        │
 │ - CDR1/2/3 Bounds│    │ - Isotype & Subclass Matching     │
-│ - FR1/2/3/4      │    │ - Allotype/Isoallotype Fingerprint│
+│ - FR1/2/3/4      │    │ - IMGT Allele Classification      │
+│                  │    │ - Allotype/Isoallotype Fingerprint│
 └────────┬─────────┘    └─────────────────┬─────────────────┘
          │                                │
          └────────────────┬───────────────┘
@@ -60,6 +63,49 @@ Variable Domain에 대해서는 ANARCII를 통한 번호 부여(IMGT, Kabat, Cho
             │ Unified Result (JSON/CSV)│
             └──────────────────────────┘
 ```
+
+## IMGT Constant Domain Alleles (Reference)
+
+`abcat`는 EU numbering 기준의 핵심 아미노산 잔기 조합(Fingerprint)을 통해 IMGT 대립유전자(Alleles)를 정밀하게 판정합니다:
+
+### 1. IGHG1 (IgG1) Alleles
+
+| IMGT Allele | Subclass | Allotype Association | Key EU Positions & Residues |
+| :--- | :--- | :--- | :--- |
+| `IGHG1*01` | IgG1 | G1m17,1 | 214K, 309L, 356D, 358L, 384N |
+| `IGHG1*02` | IgG1 | G1m17,1 | 214K, 309L, 356D, 358L, 384N (silent variant of *01) |
+| `IGHG1*03` | IgG1 | G1m3, nG1m1 | 199I, 214R, 309L, 356E, 358M, 384N |
+| `IGHG1*04` | IgG1 | G1m17,1,27 | 214K, 309L, 356D, 358L, 384N, 422I |
+| `IGHG1*05` | IgG1 | G1m17,1,28 | 214K, 309L, 356D, 358L, 384N, 435R, 436Y |
+| `IGHG1*07` | IgG1 | G1m17,1,2 | 214K, 309L, 356D, 358L, 384N, 431G |
+| `IGHG1*08` | IgG1 | G1m3,1 | 199I, 214R, 309L, 356D, 358L, 384N |
+| `IGHG1*11` | IgG1 | G1m17,1 (309V) | 214K, 309V, 356D, 358L, 384N |
+| `IGHG1*13` | IgG1 | G1m17,1 (296F) | 214K, 296F, 309L, 356D, 358L, 384N |
+
+### 2. IGHG2, IGHG3, IGHG4 & Light Chain Alleles
+
+| Subclass | IMGT Allele | Allotype / Marker | Key Residues (EU numbering) |
+| :--- | :--- | :--- | :--- |
+| **IgG2** | `IGHG2*01` | G2m.. (G2m-) | 192S, 193L, 282V, 309V |
+| | `IGHG2*02` | G2m23 | 282M |
+| | `IGHG2*04` | G2m(ny) | 192N, 193F, 282V |
+| | `IGHG2*06` | - | 282V |
+| **IgG3** | `IGHG3*01` | G3m5,26 | 291P, 384S, 435R, 436F |
+| | `IGHG3*04` | G3m21 | 291L, 384S, 435H, 436Y |
+| | `IGHG3*11` | G3m5,13,14 | 397V, 419Q, 435R, 436F |
+| | `IGHG3*12` | G3m15,16 | 292W, 378M, 384N, 435H, 436Y |
+| | `IGHG3*13` | G3m6,24 | 384S, 419E, 435H, 436Y |
+| | `IGHG3*14` | G3m10,27,28 | 384S, 422I, 435R, 436Y |
+| | `IGHG3*17` | G3m11 | 384S, 435H, 436Y |
+| | `IGHG3*18` | nG3m11 | 384N, 435H, 436Y |
+| | `IGHG3*19` | G3m16,5 | 292W, 384S, 435R, 436F |
+| **IgG4** | `IGHG4*01` | nG4m(a) | 309L |
+| | `IGHG4*02` | nG4m(b) | 309V |
+| | `IGHG4*03` | - | 309L, 409K |
+| | `IGHG4*04` | - | 309L, 445P |
+| **IGKC** | `IGKC*01` / `*04` | Km3 | 153A, 191V |
+| | `IGKC*02` | Km1,2 | 153A, 191L |
+| | `IGKC*03` | Km1 | 153V, 191L |
 
 ## Key Allotype Fingerprints (Reference)
 
