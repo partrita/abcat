@@ -16,6 +16,18 @@ def test_cli_analyze():
     assert "Heavy" in result.stdout or "Seq ID" in result.stdout
 
 
+def test_cli_rejects_invalid_sequence():
+    result = runner.invoke(app, ["analyze", "--sequence", "EVQLX*"])
+    assert result.exit_code != 0
+    assert "invalid characters" in result.stderr
+
+
+def test_cli_rejects_invalid_format():
+    result = runner.invoke(app, ["analyze", "--sequence", TRASTUZUMAB_VH, "--format", "xml"])
+    assert result.exit_code != 0
+    assert "json, csv" in result.stderr
+
+
 def test_cli_vdomain():
     result = runner.invoke(app, ["vdomain", "--sequence", TRASTUZUMAB_VH])
     assert result.exit_code == 0

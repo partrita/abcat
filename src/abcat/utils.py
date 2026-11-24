@@ -4,6 +4,18 @@ from pathlib import Path
 
 from abcat.schemas import BatchAnalysisResult, FullChainAnalysis
 
+VALID_AMINO_ACIDS = set("ACDEFGHIKLMNPQRSTVWY")
+
+
+def validate_sequence(seq: str) -> None:
+    """Raise ValueError when a sequence contains non-standard amino acids."""
+    invalid = sorted(set(seq.upper()) - VALID_AMINO_ACIDS)
+    if invalid:
+        raise ValueError(
+            f"Sequence contains invalid characters: {', '.join(invalid)}. "
+            "Allowed characters: 20 standard amino acids."
+        )
+
 
 def clean_sequence(seq: str) -> str:
     """Cleans an input amino acid sequence by removing whitespace, line breaks, tabs, non-alphabet characters, and FASTA header if present."""
@@ -53,7 +65,10 @@ def read_fasta_file(filepath: str | Path) -> list[tuple[str, str]]:
     if not path.exists():
         raise FileNotFoundError(f"FASTA file not found: {filepath}")
     with open(path, "r", encoding="utf-8") as f:
-        return parse_fasta(f.read())
+        records = parse_fasta(f.read())
+    if not records:
+        raise ValueError(f"FASTA file is empty or has no valid records: {filepath}")
+    return records
 
 
 def export_json(result: FullChainAnalysis | BatchAnalysisResult) -> str:
@@ -79,6 +94,8 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
         "CDR3_Seq",
         "V_Domain_Seq",
         "C_Region_Seq",
+        "Status",
+        "Warnings",
     ]
     writer.writerow(headers)
 
@@ -145,6 +162,8 @@ def export_csv(result: FullChainAnalysis | BatchAnalysisResult) -> str:
             cdr3,
             v_seq,
             c_seq,
+            "OK" if item.success else "FAILED",
+            ";".join(item.warnings),
         ]
         writer.writerow(row)
 

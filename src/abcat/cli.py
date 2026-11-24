@@ -3,15 +3,17 @@ from typing import Annotated
 
 import typer
 from rich.console import Console
+from rich.progress import track
 from rich.table import Table
 
 from abcat import analyze_cdomain, analyze_chain, analyze_vdomain
-from abcat.schemas import BatchAnalysisResult
+from abcat.schemas import BatchAnalysisResult, FullChainAnalysis
 from abcat.utils import (
     clean_sequence,
     export_csv,
     export_json,
     read_fasta_file,
+    validate_sequence,
 )
 
 app = typer.Typer(
@@ -20,6 +22,43 @@ app = typer.Typer(
     add_completion=False,
 )
 console = Console()
+VALID_SCHEMES = {"imgt", "kabat", "martin", "chothia", "aho"}
+VALID_FORMATS = {"json", "csv"}
+
+
+def _validate_options(output_format: str, scheme: str) -> None:
+    if output_format.lower() not in VALID_FORMATS:
+        raise typer.BadParameter("must be one of: json, csv", param_hint="--format")
+    if scheme.lower() not in VALID_SCHEMES:
+        raise typer.BadParameter(
+            "must be one of: imgt, kabat, martin, chothia, aho", param_hint="--scheme"
+        )
+
+
+def _validate_input_sequence(sequence: str) -> str:
+    cleaned = clean_sequence(sequence)
+    if not cleaned:
+        raise typer.BadParameter(
+            "sequence is empty. Example: abcat analyze --sequence EVQLVES...",
+            param_hint="--sequence",
+        )
+    try:
+        validate_sequence(cleaned)
+    except ValueError as exc:
+        raise typer.BadParameter(
+            f"{exc} Example: abcat analyze --sequence EVQLVES...",
+            param_hint="--sequence",
+        ) from exc
+    return cleaned
+
+
+def _failed_result(sequence_id: str, sequence: str, exc: Exception) -> FullChainAnalysis:
+    return FullChainAnalysis(
+        sequence_id=sequence_id,
+        full_sequence=sequence,
+        success=False,
+        warnings=[str(exc)],
+    )
 
 
 @app.command("analyze")
@@ -47,28 +86,42 @@ def analyze_command(
             help="Numbering scheme: imgt, kabat, martin, chothia, aho (default: imgt)",
         ),
     ] = "imgt",
+    verbose: Annotated[bool, typer.Option("--verbose", help="Show detailed CDR and marker data")] = False,
+    sequence_id: Annotated[str | None, typer.Option("--sequence-id", help="Show one result by sequence ID")] = None,
 ):
     """Analyzes antibody chain sequence(s) for V-domain CDRs and Constant region Allotypes."""
+    _validate_options(output_format, scheme)
     records = []
 
     if sequence:
-        records.append(("query", clean_sequence(sequence)))
+        records.append(("query", _validate_input_sequence(sequence)))
     elif input_file and input_file.exists():
-        records = read_fasta_file(input_file)
+        try:
+            records = read_fasta_file(input_file)
+        except (FileNotFoundError, ValueError) as exc:
+            raise typer.BadParameter(str(exc), param_hint="--input") from exc
+        for seq_id, seq in records:
+            try:
+                validate_sequence(seq)
+            except ValueError as exc:
+                raise typer.BadParameter(
+                    f"{seq_id}: {exc}", param_hint="--input"
+                ) from exc
     else:
-        console.print(
-            "[red]Error:[/red] Please provide either --sequence or a valid --input FASTA file."
+        raise typer.BadParameter(
+            "provide --sequence or --input. Example: abcat analyze --sequence EVQLVES..."
         )
-        raise typer.Exit(code=1)
 
     results = []
     for seq_id, seq_str in records:
-        res = analyze_chain(seq_str, sequence_id=seq_id, scheme=scheme)
-        results.append(res)
+        try:
+            results.append(analyze_chain(seq_str, sequence_id=seq_id, scheme=scheme))
+        except Exception as exc:
+            results.append(_failed_result(seq_id, seq_str, exc))
 
     batch_res = BatchAnalysisResult(
         total_sequences=len(results),
-        successful_analyses=len(results),
+        successful_analyses=sum(r.success for r in results),
         results=results,
     )
 
@@ -78,11 +131,15 @@ def analyze_command(
         else export_csv(batch_res)
     )
 
+    if sequence_id and not any(r.sequence_id == sequence_id for r in results):
+        raise typer.BadParameter(f"sequence ID not found: {sequence_id}", param_hint="--sequence-id")
+
     if output:
         output.write_text(formatted_output, encoding="utf-8")
         console.print(f"[green]Saved analysis results to {output}[/green]")
     else:
-        _render_rich_table(results)
+        selected = [r for r in results if not sequence_id or r.sequence_id == sequence_id]
+        _render_rich_table(selected, verbose=verbose)
 
 
 @app.command("batch")
@@ -108,19 +165,23 @@ def batch_command(
     ] = "imgt",
 ):
     """Batch processes a FASTA file of antibody sequences."""
-    if not input_file.exists():
-        console.print(f"[red]Error:[/red] Input file not found: {input_file}")
-        raise typer.Exit(code=1)
+    _validate_options(output_format, scheme)
+    try:
+        records = read_fasta_file(input_file)
+    except (FileNotFoundError, ValueError) as exc:
+        raise typer.BadParameter(str(exc), param_hint="--input") from exc
 
-    records = read_fasta_file(input_file)
-    results = [
-        analyze_chain(seq_str, sequence_id=seq_id, scheme=scheme)
-        for seq_id, seq_str in records
-    ]
+    results = []
+    for seq_id, seq_str in track(records, description="Analyzing"):
+        try:
+            validate_sequence(seq_str)
+            results.append(analyze_chain(seq_str, sequence_id=seq_id, scheme=scheme))
+        except Exception as exc:
+            results.append(_failed_result(seq_id, seq_str, exc))
 
     batch_res = BatchAnalysisResult(
         total_sequences=len(results),
-        successful_analyses=len(results),
+        successful_analyses=sum(r.success for r in results),
         results=results,
     )
 
@@ -130,9 +191,14 @@ def batch_command(
         else export_csv(batch_res)
     )
     output.write_text(formatted_output, encoding="utf-8")
-    console.print(
-        f"[bold green]Batch processing completed.[/bold green] Wrote {len(results)} records to [cyan]{output}[/cyan]"
-    )
+    failed = len(results) - batch_res.successful_analyses
+    console.print(f"[bold green]Completed:[/bold green] {batch_res.successful_analyses}")
+    console.print(f"[bold red]Failed:[/bold red] {failed}")
+    if failed:
+        for result in results:
+            if not result.success:
+                console.print(f"- {result.sequence_id}: {result.warnings[0]}")
+    console.print(f"Wrote {len(results)} records to [cyan]{output}[/cyan]")
 
 
 @app.command("vdomain")
@@ -203,7 +269,7 @@ def cdomain_command(
             )
 
 
-def _render_rich_table(results):
+def _render_rich_table(results, verbose: bool = False):
     table = Table(title="Antibody Sequence Analysis Summary")
     table.add_column("Seq ID", style="cyan", no_wrap=True)
     table.add_column("Chain", style="magenta")
@@ -211,10 +277,12 @@ def _render_rich_table(results):
     table.add_column("Isotype", style="green")
     table.add_column("Subclass", style="bold green")
     table.add_column("IMGT Allele", style="cyan")
-    table.add_column("Allotypes", style="yellow")
-    table.add_column("CDR1", style="blue")
-    table.add_column("CDR2", style="blue")
-    table.add_column("CDR3", style="bold blue")
+    table.add_column("Status", style="green")
+    if verbose:
+        table.add_column("Allotypes", style="yellow")
+        table.add_column("CDR1", style="blue")
+        table.add_column("CDR2", style="blue")
+        table.add_column("CDR3", style="bold blue")
 
     for r in results:
         chain = r.v_analysis.chain_type.value if r.v_analysis else "-"
@@ -247,18 +315,18 @@ def _render_rich_table(results):
             else "-"
         )
 
-        table.add_row(
+        row = [
             r.sequence_id,
             chain,
             scheme_str,
             iso,
             sub,
             allele,
-            allos,
-            cdr1,
-            cdr2,
-            cdr3,
-        )
+            "OK" if r.success else "FAILED",
+        ]
+        if verbose:
+            row.extend([allos, cdr1, cdr2, cdr3])
+        table.add_row(*row)
 
     console.print(table)
 
